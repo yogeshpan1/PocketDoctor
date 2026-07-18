@@ -19,7 +19,9 @@
             <h5>Possible condition: {{ result.disease }}</h5>
             <p class="mb-0">Recommended specialist: <strong>{{ result.department }}</strong></p>
         </div>
-        <p class="text-muted">(Booking flow coming next — appointment linking not built yet.)</p>
+        <a href="{% url 'appointments:book' %}?department={{ result.department }}" class="btn btn-success">
+            Book an appointment
+        </a>
         {% endif %}
     </div>
 </div>

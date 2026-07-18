@@ -15,20 +15,27 @@
         </form>
 
         {% if result %}
-        <div class="alert alert-info mt-4">
-            <h5>Possible condition: {{ result.disease }}</h5>
-            <p class="mb-0">Recommended specialist: <strong>{{ result.department }}</strong></p>
-        </div>
+            {% if result.confident %}
+            <div class="alert alert-info mt-4">
+                <h5>Possible condition: {{ result.disease }}</h5>
+                <p class="mb-0">Recommended specialist: <strong>{{ result.department }}</strong></p>
+            </div>
+            {% else %}
+            <div class="alert alert-warning mt-4">
+                <p class="mb-0">Your symptoms don't clearly match a specific condition in our system.
+                We recommend seeing a <strong>General Physician</strong> for a proper assessment.</p>
+            </div>
+            {% endif %}
 
-        {% if explanation %}
-        <div class="alert alert-secondary">
-            <p class="mb-0">{{ explanation }}</p>
-        </div>
-        {% endif %}
+            {% if explanation %}
+            <div class="alert alert-secondary">
+                <p class="mb-0">{{ explanation }}</p>
+            </div>
+            {% endif %}
 
-        <a href="{% url 'appointments:book' %}?department={{ result.department }}" class="btn btn-success">
-            Book an appointment
-        </a>
+            <a href="{% url 'appointments:book' %}?department={{ result.department }}" class="btn btn-success">
+                Book an appointment
+            </a>
         {% endif %}
     </div>
 </div>

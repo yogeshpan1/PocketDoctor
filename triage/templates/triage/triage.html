@@ -19,6 +19,13 @@
             <h5>Possible condition: {{ result.disease }}</h5>
             <p class="mb-0">Recommended specialist: <strong>{{ result.department }}</strong></p>
         </div>
+
+        {% if explanation %}
+        <div class="alert alert-secondary">
+            <p class="mb-0">{{ explanation }}</p>
+        </div>
+        {% endif %}
+
         <a href="{% url 'appointments:book' %}?department={{ result.department }}" class="btn btn-success">
             Book an appointment
         </a>

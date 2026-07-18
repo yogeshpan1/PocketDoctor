@@ -3,14 +3,29 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
-        <h2 class="mb-4">Log In</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Log In</button>
-        </form>
-        <p class="mt-3">Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0 rounded-4 p-4 mt-4">
+            <div class="text-center mb-4">
+                <div class="mx-auto mb-3" style="width:56px;height:56px;border-radius:14px;background:#e8f0fe;display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-stethoscope" style="color:#2563eb;font-size:22px;"></i>
+                </div>
+                <h3 class="fw-bold">Welcome back</h3>
+                <p class="text-muted">Log in to continue to Pocket Doctor</p>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Username</label>
+                    <input type="text" name="username" class="form-control form-control-lg" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Password</label>
+                    <input type="password" name="password" class="form-control form-control-lg" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100 mt-2">Log In</button>
+            </form>
+            <p class="text-center text-muted mt-4 mb-0">Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+        </div>
     </div>
 </div>
 {% endblock %}

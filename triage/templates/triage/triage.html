@@ -4,38 +4,42 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <h2 class="mb-4">Describe Your Symptoms</h2>
-        <form method="POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <textarea name="symptoms" class="form-control" rows="4"
+        <div class="card shadow-sm border-0 rounded-4 p-4 mt-4">
+            <h3 class="fw-bold mb-1">Describe Your Symptoms</h3>
+            <p class="text-muted mb-4">Be as specific as you can for a better recommendation.</p>
+            <form method="POST">
+                {% csrf_token %}
+                <textarea name="symptoms" class="form-control form-control-lg mb-3" rows="4"
                     placeholder="e.g. I have had a red itchy rash on my arms for two weeks...">{{ request.POST.symptoms }}</textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Check Symptoms</button>
-        </form>
+                <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-magnifying-glass me-1"></i>Check Symptoms</button>
+            </form>
+        </div>
 
         {% if result %}
+        <div class="card shadow-sm border-0 rounded-4 p-4 mt-3">
             {% if result.confident %}
-            <div class="alert alert-info mt-4">
-                <h5>Possible condition: {{ result.disease }}</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-circle-check text-success me-2"></i>
+                    <h5 class="fw-bold mb-0">Possible condition: {{ result.disease }}</h5>
+                </div>
                 <p class="mb-0">Recommended specialist: <strong>{{ result.department }}</strong></p>
-            </div>
             {% else %}
-            <div class="alert alert-warning mt-4">
-                <p class="mb-0">Your symptoms don't clearly match a specific condition in our system.
-                We recommend seeing a <strong>General Physician</strong> for a proper assessment.</p>
-            </div>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-triangle-exclamation text-warning me-2"></i>
+                    <h5 class="fw-bold mb-0">No clear match found</h5>
+                </div>
+                <p class="mb-0">We recommend seeing a <strong>General Physician</strong> for a proper assessment.</p>
             {% endif %}
 
             {% if explanation %}
-            <div class="alert alert-secondary">
-                <p class="mb-0">{{ explanation }}</p>
-            </div>
+            <hr>
+            <p class="text-muted mb-0">{{ explanation }}</p>
             {% endif %}
+        </div>
 
-            <a href="{% url 'appointments:book' %}?department={{ result.department }}" class="btn btn-success">
-                Book an appointment
-            </a>
+        <a href="{% url 'appointments:book' %}?department={{ result.department }}" class="btn btn-success btn-lg mt-3">
+            <i class="fas fa-calendar-plus me-1"></i>Book an appointment
+        </a>
         {% endif %}
     </div>
 </div>

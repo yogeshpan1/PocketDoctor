@@ -2,31 +2,53 @@
 {% block title %}My Appointments - Pocket Doctor{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">My Appointments</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">My Appointments</h2>
+    <a href="{% url 'appointments:book' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>New Appointment</a>
+</div>
+
 {% if appointments %}
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Doctor</th>
-            <th>Problem</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for appt in appointments %}
-        <tr>
-            <td>{{ appt.doctor.name }}</td>
-            <td>{{ appt.problem }}</td>
-            <td>{{ appt.date }}</td>
-            <td>{{ appt.time }}</td>
-            <td>{{ appt.get_status_display }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4">Doctor</th>
+                    <th>Problem</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th class="pe-4">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appt in appointments %}
+                <tr>
+                    <td class="ps-4 fw-semibold">Dr. {{ appt.doctor.name }}</td>
+                    <td class="text-muted">{{ appt.problem|truncatechars:40 }}</td>
+                    <td>{{ appt.date }}</td>
+                    <td>{{ appt.time }}</td>
+                    <td class="pe-4">
+                        {% if appt.status == 'pending' %}
+                            <span class="badge rounded-pill text-bg-warning">Pending</span>
+                        {% elif appt.status == 'confirmed' %}
+                            <span class="badge rounded-pill text-bg-success">Confirmed</span>
+                        {% elif appt.status == 'cancelled' %}
+                            <span class="badge rounded-pill text-bg-danger">Cancelled</span>
+                        {% else %}
+                            <span class="badge rounded-pill text-bg-secondary">Completed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% else %}
-<p>You have no appointments yet.</p>
+<div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+    <i class="fas fa-calendar-xmark fa-2x text-muted mb-3"></i>
+    <p class="text-muted mb-3">You have no appointments yet.</p>
+    <a href="{% url 'appointments:book' %}" class="btn btn-primary mx-auto" style="width:fit-content;">Book your first appointment</a>
+</div>
 {% endif %}
 {% endblock %}

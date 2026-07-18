@@ -1,0 +1,26 @@
+{% extends "home.html" %}
+{% block title %}Symptom Checker - Pocket Doctor{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">Describe Your Symptoms</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <textarea name="symptoms" class="form-control" rows="4"
+                    placeholder="e.g. I have had a red itchy rash on my arms for two weeks...">{{ request.POST.symptoms }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Check Symptoms</button>
+        </form>
+
+        {% if result %}
+        <div class="alert alert-info mt-4">
+            <h5>Possible condition: {{ result.disease }}</h5>
+            <p class="mb-0">Recommended specialist: <strong>{{ result.department }}</strong></p>
+        </div>
+        <p class="text-muted">(Booking flow coming next — appointment linking not built yet.)</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

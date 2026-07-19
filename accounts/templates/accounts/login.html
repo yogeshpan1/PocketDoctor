@@ -1,82 +1,127 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Log In — Pocket Doctor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body data-no-dark="true">
-
-<div class="auth-layout">
-
-    <!-- LEFT: always cream/light -->
-    <div class="auth-left">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body data-no-dark="true">
+    <div class="auth-layout">
+      <!-- LEFT: always cream/light -->
+      <div class="auth-left">
         <a href="{% url 'home' %}" class="auth-logo">
-            <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true">
-                <path d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z" fill="#AC3400"/>
-            </svg>
-            Pocket Doctor
+          <svg
+            width="16"
+            height="14"
+            viewBox="0 0 16 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z"
+              fill="#AC3400"
+            />
+          </svg>
+          Pocket Doctor
         </a>
 
         <div class="auth-form-area">
-            <div class="auth-form-box">
-                <h1 class="auth-heading">Welcome back</h1>
-                <p class="auth-subtext">Enter your credentials to access your care portal.</p>
+          <div class="auth-form-box">
+            <h1 class="auth-heading">Welcome back</h1>
+            <p class="auth-subtext">
+              Enter your credentials to access your care portal.
+            </p>
 
-                {% if form.non_field_errors %}
-                <div class="auth-error-box">
-                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
-                </div>
-                {% endif %}
-
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="field-group">
-                        <label class="field-label" for="id_username">Username</label>
-                        <input type="text" name="username" id="id_username" class="field-input" placeholder="your_username" autocomplete="username" required>
-                    </div>
-                    <div class="field-group">
-                        <label class="field-label" for="id_password">Password</label>
-                        <input type="password" name="password" id="id_password" class="field-input" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password" required>
-                    </div>
-                    <button type="submit" class="btn-form">Log In &rarr;</button>
-                </form>
-
-                <p class="form-note">
-                    Don't have an account?
-                    <a href="{% url 'signup' %}" class="form-link">Sign up</a>
-                </p>
+            {% if form.non_field_errors %}
+            <div class="auth-error-box">
+              {% for error in form.non_field_errors %}{{ error }}{% endfor %}
             </div>
+            {% endif %}
+
+            <form method="POST">
+              {% csrf_token %}
+              <div class="field-group">
+                <label class="field-label" for="id_username">Username</label>
+                <input
+                  type="text"
+                  name="username"
+                  id="id_username"
+                  class="field-input"
+                  placeholder="your_username"
+                  autocomplete="username"
+                  required
+                />
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="id_password">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  id="id_password"
+                  class="field-input"
+                  placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+                  autocomplete="current-password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn-form">Log In &rarr;</button>
+            </form>
+
+            <p class="form-note">
+              Don't have an account?
+              <a href="{% url 'signup' %}" class="form-link">Sign up</a>
+            </p>
+          </div>
         </div>
 
-        <div class="auth-bottom">
-            Pocket Doctor &copy; 2026
-        </div>
-    </div>
+        <div class="auth-bottom">Pocket Doctor &copy; 2026</div>
+      </div>
 
-    <!-- RIGHT: always dark, no toggle -->
-    <div class="auth-right-dark">
+      <!-- RIGHT: always dark, no toggle -->
+      <div class="auth-right-dark">
         <div class="auth-panel">
-            <div class="pulse-wrap">
-                <svg class="pulse-svg" viewBox="0 0 400 80" preserveAspectRatio="none">
-                    <path class="pulse-line pulse-line-dark" d="M0,40 L60,40 L75,40 L90,10 L105,70 L120,40 L140,40 L400,40" />
-                </svg>
-            </div>
-            <div class="auth-panel-icon">
-                <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true">
-                    <path d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z" fill="#AC3400"/>
-                </svg>
-            </div>
-            <p class="auth-quote">"The fastest path between feeling unwell and getting expert care."</p>
-            <p class="auth-quote-by">Clinical precision meets modern convenience</p>
+          <div class="pulse-wrap">
+            <svg
+              class="pulse-svg"
+              viewBox="0 0 400 80"
+              preserveAspectRatio="none"
+            >
+              <path
+                class="pulse-line pulse-line-dark"
+                d="M0,40 L30,40 L40,40 L48,15 L56,65 L64,40 L100,40 L130,40 L140,40 L148,15 L156,65 L164,40 L200,40 L230,40 L240,40 L248,15 L256,65 L264,40 L300,40 L330,40 L340,40 L348,15 L356,65 L364,40 L400,40"
+              />
+            </svg>
+          </div>
+          <div class="auth-panel-icon">
+            <svg
+              width="16"
+              height="14"
+              viewBox="0 0 16 14"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z"
+                fill="#AC3400"
+              />
+            </svg>
+          </div>
+          <p class="auth-quote">
+            "The fastest path between feeling unwell and getting expert care."
+          </p>
+          <p class="auth-quote-by">
+            Clinical precision meets modern convenience
+          </p>
         </div>
+      </div>
     </div>
 
-</div>
-
-<script src="{% static 'js/main.js' %}"></script>
-</body>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
 </html>

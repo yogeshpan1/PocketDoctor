@@ -1,145 +1,184 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Account — Pocket Doctor</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <style>
-        /* Hide Django's default UL bullet list on password help text */
-        .field-input-wrap ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .field-input-wrap ul li {
-            font-size: 0.72rem;
-            color: #9ca3af;
-            line-height: 1.6;
-            font-family: 'Inter', sans-serif;
-        }
+      /* Hide Django's default UL bullet list on password help text */
+      .field-input-wrap ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .field-input-wrap ul li {
+        font-size: 0.72rem;
+        color: #9ca3af;
+        line-height: 1.6;
+        font-family: "Inter", sans-serif;
+      }
     </style>
-</head>
-<body data-no-dark="true">
-
-<div class="auth-layout">
-
-    <!-- LEFT: always cream/light -->
-    <div class="auth-left">
+  </head>
+  <body data-no-dark="true">
+    <div class="auth-layout">
+      <!-- LEFT: always cream/light -->
+      <div class="auth-left">
         <a href="{% url 'home' %}" class="auth-logo">
-            <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true">
-                <path d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z" fill="#AC3400"/>
-            </svg>
-            Pocket Doctor
+          <svg
+            width="16"
+            height="14"
+            viewBox="0 0 16 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z"
+              fill="#AC3400"
+            />
+          </svg>
+          Pocket Doctor
         </a>
 
         <div class="auth-form-area">
-            <div class="auth-form-box" style="max-width: 420px;">
-                <h1 class="auth-heading">Create an account</h1>
-                <p class="auth-subtext">Join Pocket Doctor to access AI-guided triage and instant booking.</p>
+          <div class="auth-form-box" style="max-width: 420px">
+            <h1 class="auth-heading">Create an account</h1>
+            <p class="auth-subtext">
+              Join Pocket Doctor to access AI-guided triage and instant booking.
+            </p>
 
-                <form method="POST">
-                    {% csrf_token %}
-                    {% for field in form %}
-                    <div class="field-group">
-                        <label class="field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        <div class="field-input-wrap">
-                            {{ field }}
-                            {% if field.help_text %}
-                                <div class="field-help">{{ field.help_text }}</div>
-                            {% endif %}
-                            {% for error in field.errors %}
-                                <div class="field-error">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                    <button type="submit" class="btn-form">Create Account &rarr;</button>
-                </form>
+            <form method="POST">
+              {% csrf_token %} {% for field in form %}
+              <div class="field-group">
+                <label class="field-label" for="{{ field.id_for_label }}"
+                  >{{ field.label }}</label
+                >
+                <div class="field-input-wrap">
+                  {{ field }} {% if field.help_text %}
+                  <div class="field-help">{{ field.help_text }}</div>
+                  {% endif %} {% for error in field.errors %}
+                  <div class="field-error">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endfor %}
+              <button type="submit" class="btn-form">
+                Create Account &rarr;
+              </button>
+            </form>
 
-                <p class="form-note">
-                    Already have an account?
-                    <a href="{% url 'login' %}" class="form-link">Log in</a>
-                </p>
-            </div>
+            <p class="form-note">
+              Already have an account?
+              <a href="{% url 'login' %}" class="form-link">Log in</a>
+            </p>
+          </div>
         </div>
 
-        <div class="auth-bottom">
-            Pocket Doctor &copy; 2026
-        </div>
-    </div>
+        <div class="auth-bottom">Pocket Doctor &copy; 2026</div>
+      </div>
 
-    <!-- RIGHT: always sage, no toggle -->
-    <div class="auth-right-sage">
+      <!-- RIGHT: always sage, no toggle -->
+      <div class="auth-right-sage">
         <div class="auth-panel">
-            <div class="pulse-wrap">
-                <svg class="pulse-svg" viewBox="0 0 400 80" preserveAspectRatio="none">
-                    <path class="pulse-line pulse-line-sage" d="M0,40 L60,40 L75,40 L90,10 L105,70 L120,40 L140,40 L400,40" />
-                </svg>
-            </div>
-            <div class="auth-panel-icon auth-panel-icon-sage">
-            <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true">
-                <path d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z" fill="#111318"/>
+          <div class="pulse-wrap">
+            <svg
+              class="pulse-svg"
+              viewBox="0 0 400 80"
+              preserveAspectRatio="none"
+            >
+              <path
+                class="pulse-line pulse-line-dark"
+                d="M0,40 L30,40 L40,40 L48,15 L56,65 L64,40 L100,40 L130,40 L140,40 L148,15 L156,65 L164,40 L200,40 L230,40 L240,40 L248,15 L256,65 L264,40 L300,40 L330,40 L340,40 L348,15 L356,65 L364,40 L400,40"
+              />
             </svg>
-        </div>
-        <h2 class="auth-panel-heading">Stop guessing your symptoms. Start getting treatment.</h2>
-        <ul class="auth-panel-list">
+          </div>
+          <div class="auth-panel-icon auth-panel-icon-sage">
+            <svg
+              width="16"
+              height="14"
+              viewBox="0 0 16 14"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z"
+                fill="#111318"
+              />
+            </svg>
+          </div>
+          <h2 class="auth-panel-heading">
+            Stop guessing your symptoms. Start getting treatment.
+          </h2>
+          <ul class="auth-panel-list">
             <li>AI-matched to the right specialist</li>
             <li>Honest confidence — no false certainty</li>
             <li>Instant appointment booking</li>
-        </ul>
-    </div>
-</div>
+          </ul>
+        </div>
+      </div>
 
-{% if not messages %}
-<script>
-    var quotes = [
-        {
+      {% if not messages %}
+      <script>
+        var quotes = [
+          {
             heading: "Stop guessing your symptoms. Start getting treatment.",
-            points: ["AI-matched to the right specialist", "Honest confidence — no false certainty", "Instant appointment booking"]
-        },
-        {
+            points: [
+              "AI-matched to the right specialist",
+              "Honest confidence — no false certainty",
+              "Instant appointment booking",
+            ],
+          },
+          {
             heading: "Your symptoms, understood in seconds.",
-            points: ["Trained on real clinical text data", "No sign-up required to see how it works", "Book the same day, if slots are open"]
-        },
-        {
+            points: [
+              "Trained on real clinical text data",
+              "No sign-up required to see how it works",
+              "Book the same day, if slots are open",
+            ],
+          },
+          {
             heading: "Built for clarity, not alarm.",
-            points: ["Plain language, no medical jargon", "Tells you when it isn't sure", "You always see the reasoning"]
-        }
-    ];
-    var idx = 0;
-    var headingEl = document.getElementById('rotatingQuote');
-    var listEl = document.getElementById('rotatingList');
+            points: [
+              "Plain language, no medical jargon",
+              "Tells you when it isn't sure",
+              "You always see the reasoning",
+            ],
+          },
+        ];
+        var idx = 0;
+        var headingEl = document.getElementById("rotatingQuote");
+        var listEl = document.getElementById("rotatingList");
 
-    headingEl.style.transition = 'opacity 0.4s ease';
-    listEl.style.transition = 'opacity 0.4s ease';
+        headingEl.style.transition = "opacity 0.4s ease";
+        listEl.style.transition = "opacity 0.4s ease";
 
-    setInterval(function () {
-        headingEl.style.opacity = '0';
-        listEl.style.opacity = '0';
+        setInterval(function () {
+          headingEl.style.opacity = "0";
+          listEl.style.opacity = "0";
 
-        setTimeout(function () {
+          setTimeout(function () {
             idx = (idx + 1) % quotes.length;
             var q = quotes[idx];
             headingEl.textContent = q.heading;
-            listEl.innerHTML = '';
+            listEl.innerHTML = "";
             q.points.forEach(function (p) {
-                var li = document.createElement('li');
-                li.textContent = p;
-                listEl.appendChild(li);
+              var li = document.createElement("li");
+              li.textContent = p;
+              listEl.appendChild(li);
             });
-            headingEl.style.opacity = '1';
-            listEl.style.opacity = '1';
-        }, 400);
+            headingEl.style.opacity = "1";
+            listEl.style.opacity = "1";
+          }, 400);
+        }, 4500);
+      </script>
+      {% endif %}
+    </div>
 
-    }, 4500);
-</script>
-{% endif %}
-
-</div>
-
-<script src="{% static 'js/main.js' %}"></script>
-</body>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
 </html>

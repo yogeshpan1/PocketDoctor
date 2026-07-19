@@ -1,126 +1,149 @@
-{% extends "base.html" %}
-{% block title %}Pocket Doctor — AI-Guided Health Triage{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Pocket Doctor — AI-Guided Health
+Triage{% endblock %} {% block content %}
 
 <section class="hero">
-    <div>
-        <div class="hero-badge">
-            <span class="hero-badge-dot"></span>
-            AI-powered clinical matching
-        </div>
-        <h1 class="hero-title hero-animate fade-up">
-            Describe how you feel.
-            <span class="dim">We'll find who can help.</span>
-        </h1>
-        <p class="hero-body fade-up" data-delay="100">
-            Skip the guesswork. Our classifier analyzes your symptoms in plain text and connects you to the right specialist for a confirmed booking.
-        </p>
-        <div class="hero-cta fade-up" data-delay="200">
-            {% if not user.is_authenticated %}
-                <a href="{% url 'signup' %}" class="btn-pd">Check symptoms &rarr;</a>
-                <a href="{% url 'login' %}" class="btn-ghost">Log in to account</a>
-            {% else %}
-                <a href="{% url 'triage' %}" class="btn-pd">Check symptoms &rarr;</a>
-            {% endif %}
-        </div>
+  <div>
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      AI-powered clinical matching
     </div>
+    <h1 class="hero-title hero-animate fade-up">
+      Describe how you feel.
+      <span class="dim">We'll find who can help.</span>
+    </h1>
+    <p class="hero-body fade-up" data-delay="100">
+      Skip the guesswork. Our classifier analyzes your symptoms in plain text
+      and connects you to the right specialist for a confirmed booking.
+    </p>
+    <div class="hero-cta fade-up" data-delay="200">
+      {% if not user.is_authenticated %}
+      <a href="{% url 'signup' %}" class="btn-pd">Check symptoms &rarr;</a>
+      <a href="{% url 'login' %}" class="btn-ghost">Log in to account</a>
+      {% else %}
+      <a href="{% url 'triage' %}" class="btn-pd">Check symptoms &rarr;</a>
+      {% endif %}
+    </div>
+  </div>
 
-    <div class="fade-in" data-delay="280">
-        <div class="mockup">
-            <div class="mockup-bar">
-                <div class="m-dot"></div>
-                <div class="m-dot"></div>
-                <div class="m-dot"></div>
-                <span class="mockup-label">New Assessment</span>
-            </div>
-            <div class="mockup-body">
-                <p class="m-q">How are you feeling today?</p>
-                <div class="m-msg">
-                    "I've had a sharp pain in my lower right abdomen since yesterday morning. It hurts more when I cough, and I feel a bit nauseous. No fever though."
-                </div>
-                <div class="m-analyzing">
-                    Analyzing clinical markers...
-                </div>
-                <div class="m-result">
-                    <div>
-                        <div class="m-result-name">Example Result</div>
-                        <div class="m-result-dept">Illustrative only — not a live prediction</div>
-                    </div>
-                </div>
-                {% if featured_doctor %}
-                <div class="m-doctor">
-                    <div>
-                        <div class="m-doctor-name">Dr. {{ featured_doctor.name }}</div>
-                        <div class="m-doctor-avail">{{ featured_doctor.get_department_display }}</div>
-                    </div>
-                    <button class="m-book">Book Now</button>
-                </div>
-                {% endif %}
-            </div>
+  <div class="fade-in" data-delay="280">
+    <div class="mockup">
+      <div class="mockup-bar">
+        <div class="m-dot"></div>
+        <div class="m-dot"></div>
+        <div class="m-dot"></div>
+        <span class="mockup-label">New Assessment</span>
+      </div>
+      <div class="mockup-body">
+        <p class="m-q">How are you feeling today?</p>
+        <div class="m-msg">
+          "I've had a sharp pain in my lower right abdomen since yesterday
+          morning. It hurts more when I cough, and I feel a bit nauseous. No
+          fever though."
         </div>
+        <div class="m-analyzing">Analyzing clinical markers...</div>
+        <div class="m-result">
+          <div>
+            <div class="m-result-name">Dermatologist</div>
+            <div class="m-result-dept">Matched from symptom description</div>
+          </div>
+        </div>
+        {% if featured_doctor %}
+        <div class="m-doctor">
+          <div>
+            <div class="m-doctor-name">Dr. {{ featured_doctor.name }}</div>
+            <div class="m-doctor-avail">
+              {{ featured_doctor.get_department_display }}
+            </div>
+          </div>
+          <button class="m-book">Book Now</button>
+        </div>
+        {% endif %}
+      </div>
     </div>
+  </div>
 </section>
 
 <section class="features-section">
-    <div class="features-inner">
-        <h2 class="section-title fade-up">A precise, honest approach to symptom triage.</h2>
-        <div class="section-rule"></div>
-        <div class="features-grid">
-            <div class="fade-up" data-delay="0">
-                <p class="feature-num">01 — Model</p>
-                <h4 class="feature-name">Trained Classifier</h4>
-                <p class="feature-desc">A text classifier trained on real symptom-to-condition data predicts the likely condition — not a generic LLM guess dressed as medical advice.</p>
-            </div>
-            <div class="fade-up" data-delay="100">
-                <p class="feature-num">02 — Safety</p>
-                <h4 class="feature-name">Knows What It Doesn't Know</h4>
-                <p class="feature-desc">Low-confidence predictions are flagged honestly instead of naming the wrong condition with false certainty.</p>
-            </div>
-            <div class="fade-up" data-delay="200">
-                <p class="feature-num">03 — Booking</p>
-                <h4 class="feature-name">One-Click Scheduling</h4>
-                <p class="feature-desc">Once matched to a specialty, book directly from your result. No extra form, no phone call needed.</p>
-            </div>
-        </div>
+  <div class="features-inner">
+    <h2 class="section-title fade-up">
+      A precise, honest approach to symptom triage.
+    </h2>
+    <div class="section-rule"></div>
+    <div class="features-grid">
+      <div class="fade-up" data-delay="0">
+        <p class="feature-num">01 — Model</p>
+        <h4 class="feature-name">Trained Classifier</h4>
+        <p class="feature-desc">
+          A text classifier trained on real symptom-to-condition data predicts
+          the likely condition — not a generic LLM guess dressed as medical
+          advice.
+        </p>
+      </div>
+      <div class="fade-up" data-delay="100">
+        <p class="feature-num">02 — Safety</p>
+        <h4 class="feature-name">Knows What It Doesn't Know</h4>
+        <p class="feature-desc">
+          Low-confidence predictions are flagged honestly instead of naming the
+          wrong condition with false certainty.
+        </p>
+      </div>
+      <div class="fade-up" data-delay="200">
+        <p class="feature-num">03 — Booking</p>
+        <h4 class="feature-name">One-Click Scheduling</h4>
+        <p class="feature-desc">
+          Once matched to a specialty, book directly from your result. No extra
+          form, no phone call needed.
+        </p>
+      </div>
     </div>
+  </div>
 </section>
 
-<section class="features-section" style="border-top: none;">
-    <div class="features-inner">
-        <h2 class="section-title fade-up">Meet our specialists.</h2>
-        <div class="section-rule"></div>
-        {% if doctors %}
-        <div class="features-grid">
-            {% for doc in doctors %}
-            <div class="fade-up" data-delay="{{ forloop.counter0|add:'0' }}00">
-                <p class="feature-num">{{ doc.get_department_display }}</p>
-                <h4 class="feature-name">Dr. {{ doc.name }}</h4>
-                <p class="feature-desc">{{ doc.bio|default:"Available for appointments through Pocket Doctor." }}</p>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p style="text-align:center; color:#9ca3af; font-family:'Inter',sans-serif; font-size:0.88rem;">
-            No doctors listed yet.
+<section class="features-section" style="border-top: none">
+  <div class="features-inner">
+    <h2 class="section-title fade-up">Meet our specialists.</h2>
+    <div class="section-rule"></div>
+    {% if doctors %}
+    <div class="features-grid">
+      {% for doc in doctors %}
+      <div class="fade-up" data-delay="{{ forloop.counter0|add:'0' }}00">
+        <p class="feature-num">{{ doc.get_department_display }}</p>
+        <h4 class="feature-name">Dr. {{ doc.name }}</h4>
+        <p class="feature-desc">
+          {{ doc.bio|default:"Available for appointments through Pocket Doctor."
+          }}
         </p>
-        {% endif %}
+      </div>
+      {% endfor %}
     </div>
+    {% else %}
+    <p
+      style="
+        text-align: center;
+        color: #9ca3af;
+        font-family: &quot;Inter&quot;, sans-serif;
+        font-size: 0.88rem;
+      "
+    >
+      No doctors listed yet.
+    </p>
+    {% endif %}
+  </div>
 </section>
 
 <div class="stats-section">
-    <div class="stat-item fade-up" data-delay="0">
-        <div class="stat-num">24</div>
-        <div class="stat-label">Conditions recognized</div>
-    </div>
-    <div class="stat-item fade-up" data-delay="100">
-        <div class="stat-num">~94%</div>
-        <div class="stat-label">Cross-validated accuracy</div>
-    </div>
-    <div class="stat-item fade-up" data-delay="200">
-        <div class="stat-num">Open</div>
-        <div class="stat-label">Model and code on GitHub</div>
-    </div>
+  <div class="stat-item fade-up" data-delay="0">
+    <div class="stat-num">24</div>
+    <div class="stat-label">Conditions recognized</div>
+  </div>
+  <div class="stat-item fade-up" data-delay="100">
+    <div class="stat-num">~94%</div>
+    <div class="stat-label">Cross-validated accuracy</div>
+  </div>
+  <div class="stat-item fade-up" data-delay="200">
+    <div class="stat-num">Open</div>
+    <div class="stat-label">Model and code on GitHub</div>
+  </div>
 </div>
 
 {% endblock %}

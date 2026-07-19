@@ -1,8 +1,3 @@
-/* =============================================
-   POCKET DOCTOR — STYLESHEET
-   Fonts: Cormorant Garamond (headings) + Inter (body)
-   No CSS variables. Colors hardcoded throughout.
-   ============================================= */
 
 *, *::before, *::after {
     box-sizing: border-box;
@@ -10,7 +5,9 @@
     padding: 0;
 }
 
-html { scroll-behavior: smooth; }
+html { 
+    scroll-behavior: smooth;
+    }
 
 body {
     font-family: 'Inter', sans-serif;
@@ -30,9 +27,7 @@ h1, h2, h3, h4, h5 { font-family: 'Cormorant Garamond', serif; }
 a { text-decoration: none; color: inherit; }
 img { display: block; max-width: 100%; }
 
-/* =============================================
-   NAVBAR
-   ============================================= */
+/* === NAVBAR ===*/
 
 .pd-nav {
     background-color: #f5f4f0;
@@ -127,9 +122,7 @@ html.dark .pd-nav-link:hover { color: #e8e6e1; }
 html.dark .btn-dark-toggle { color: #8a8f9a; border-color: rgba(255,255,255,0.15); }
 html.dark .btn-dark-toggle:hover { color: #e8e6e1; border-color: rgba(255,255,255,0.4); }
 
-/* =============================================
-   BUTTONS
-   ============================================= */
+/* === BUTTONS === */
 
 .btn-pd {
     display: inline-flex;
@@ -181,9 +174,7 @@ html.dark .btn-pd:hover {
 html.dark .btn-ghost { color: #e8e6e1; }
 html.dark .btn-ghost:hover { color: #e05c20; }
 
-/* =============================================
-   FLASH MESSAGES
-   ============================================= */
+/* === FLASH MESSAGES ===*/
 
 .messages-wrap {
     max-width: 1160px;
@@ -204,9 +195,7 @@ html.dark .btn-ghost:hover { color: #e05c20; }
 .msg-warning { background: #fff8f5; color: #92400e; border-color: #fed7aa; }
 .msg-info    { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
 
-/* =============================================
-   HOME HERO
-   ============================================= */
+/* === HOME HERO === */
 
 .hero {
     max-width: 1160px;
@@ -529,9 +518,7 @@ html.dark .feature-name { color: #e8e6e1; }
 
 html.dark .feature-desc { color: #8a8f9a; }
 
-/* =============================================
-   HOME STATS
-   ============================================= */
+/* === HOME STATS === */
 
 .stats-section {
     max-width: 1160px;
@@ -569,12 +556,7 @@ html.dark .stat-num { color: #e8e6e1; }
     color: #9ca3af;
 }
 
-/* =============================================
-   AUTH PAGES
-   NOTE: Auth pages have fixed colors, dark mode
-   does NOT apply to them. The left panel is
-   always cream. Right panel is always dark/sage.
-   ============================================= */
+/* === AUTH PAGES === */
 
 .auth-layout {
     display: grid;
@@ -636,7 +618,7 @@ html.dark .stat-num { color: #e8e6e1; }
     color: #9ca3af;
 }
 
-/* Right panels — always their own fixed color */
+/* Right panels */
 
 .auth-right-dark {
     background-color: #0d1218;
@@ -1139,9 +1121,7 @@ html.dark .form-card {
 
 .fade-in.in { opacity: 1; }
 
-/* =============================================
-   RESPONSIVE
-   ============================================= */
+/* === RESPONSIVE === */
 
 @media (max-width: 900px) {
     .hero {

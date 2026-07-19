@@ -966,3 +966,38 @@ img { display: block; max-width: 100%; }
     .pd-nav-center { display: none; }
     .hero-title { font-size: 2.8rem; }
 }
+
+/* =============================================
+   PULSE WAVEFORM ANIMATION (auth right panels)
+   ============================================= */
+
+.pulse-wrap {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+}
+
+.pulse-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.pulse-line {
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: pulse-draw 3.5s ease-in-out infinite;
+}
+
+.pulse-line-dark { stroke: #AC3400; }
+.pulse-line-sage { stroke: #111318; opacity: 0.55; }
+
+@keyframes pulse-draw {
+    0% { stroke-dashoffset: 1000; opacity: 0.3; }
+    50% { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: -1000; opacity: 0.3; }
+}

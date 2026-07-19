@@ -44,18 +44,19 @@
                 </div>
                 <div class="m-result">
                     <div>
-                        <div class="m-result-name">Gastroenterologist</div>
-                        <div class="m-result-dept">Gastroenterology / Urgent Care</div>
+                        <div class="m-result-name">Example Result</div>
+                        <div class="m-result-dept">Illustrative only — not a live prediction</div>
                     </div>
-                    <span class="m-priority">High Priority</span>
                 </div>
+                {% if featured_doctor %}
                 <div class="m-doctor">
                     <div>
-                        <div class="m-doctor-name">Dr. Sarah Jenkins</div>
-                        <div class="m-doctor-avail">Available today, 2:30 PM</div>
+                        <div class="m-doctor-name">Dr. {{ featured_doctor.name }}</div>
+                        <div class="m-doctor-avail">{{ featured_doctor.get_department_display }}</div>
                     </div>
                     <button class="m-book">Book Now</button>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -82,6 +83,28 @@
                 <p class="feature-desc">Once matched to a specialty, book directly from your result. No extra form, no phone call needed.</p>
             </div>
         </div>
+    </div>
+</section>
+
+<section class="features-section" style="border-top: none;">
+    <div class="features-inner">
+        <h2 class="section-title fade-up">Meet our specialists.</h2>
+        <div class="section-rule"></div>
+        {% if doctors %}
+        <div class="features-grid">
+            {% for doc in doctors %}
+            <div class="fade-up" data-delay="{{ forloop.counter0|add:'0' }}00">
+                <p class="feature-num">{{ doc.get_department_display }}</p>
+                <h4 class="feature-name">Dr. {{ doc.name }}</h4>
+                <p class="feature-desc">{{ doc.bio|default:"Available for appointments through Pocket Doctor." }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p style="text-align:center; color:#9ca3af; font-family:'Inter',sans-serif; font-size:0.88rem;">
+            No doctors listed yet.
+        </p>
+        {% endif %}
     </div>
 </section>
 

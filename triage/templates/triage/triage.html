@@ -1,46 +1,61 @@
-{% extends "home.html" %}
-{% block title %}Symptom Checker - Pocket Doctor{% endblock %}
+{% extends "base.html" %}
+{% block title %}Symptom Checker — Pocket Doctor{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card shadow-sm border-0 rounded-4 p-4 mt-4">
-            <h3 class="fw-bold mb-1">Describe Your Symptoms</h3>
-            <p class="text-muted mb-4">Be as specific as you can for a better recommendation.</p>
-            <form method="POST">
-                {% csrf_token %}
-                <textarea name="symptoms" class="form-control form-control-lg mb-3" rows="4"
-                    placeholder="e.g. I have had a red itchy rash on my arms for two weeks...">{{ request.POST.symptoms }}</textarea>
-                <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-magnifying-glass me-1"></i>Check Symptoms</button>
-            </form>
-        </div>
+<div class="page-wrap">
 
-        {% if result %}
-        <div class="card shadow-sm border-0 rounded-4 p-4 mt-3">
-            {% if result.confident %}
-                <div class="d-flex align-items-center mb-2">
-                    <i class="fas fa-circle-check text-success me-2"></i>
-                    <h5 class="fw-bold mb-0">Possible condition: {{ result.disease }}</h5>
-                </div>
-                <p class="mb-0">Recommended specialist: <strong>{{ result.department }}</strong></p>
-            {% else %}
-                <div class="d-flex align-items-center mb-2">
-                    <i class="fas fa-triangle-exclamation text-warning me-2"></i>
-                    <h5 class="fw-bold mb-0">No clear match found</h5>
-                </div>
-                <p class="mb-0">We recommend seeing a <strong>General Physician</strong> for a proper assessment.</p>
-            {% endif %}
+    <p class="page-eyebrow">Symptom Checker</p>
+    <h1 class="page-title">Describe your symptoms.</h1>
+    <p class="page-subtext">Plain language works best. Be specific about duration, severity, and location.</p>
 
-            {% if explanation %}
-            <hr>
-            <p class="text-muted mb-0">{{ explanation }}</p>
-            {% endif %}
-        </div>
-
-        <a href="{% url 'appointments:book' %}?department={{ result.department }}" class="btn btn-success btn-lg mt-3">
-            <i class="fas fa-calendar-plus me-1"></i>Book an appointment
-        </a>
-        {% endif %}
+    <div class="symptom-card fade-up">
+        <form method="POST">
+            {% csrf_token %}
+            <textarea
+                name="symptoms"
+                class="symptom-textarea"
+                placeholder="e.g. I've had a dull ache behind my right eye for two days. Light makes it worse, and I felt nauseous this morning."
+            >{{ request.POST.symptoms }}</textarea>
+            <button type="submit" class="btn-form" style="margin-top: 0;">Analyze Symptoms &rarr;</button>
+        </form>
     </div>
+
+    {% if result %}
+    <div class="result-card fade-up">
+
+        {% if result.confident %}
+        <div class="result-row">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                <circle cx="9" cy="9" r="8.5" fill="#f0fdf4" stroke="#bbf7d0"/>
+                <path d="M5.5 9L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="result-condition">{{ result.disease }}</div>
+        </div>
+        <div class="result-dept">{{ result.department }}</div>
+
+        {% else %}
+        <div class="result-row">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                <path d="M9 2L16.5 15.5H1.5L9 2Z" fill="#fff8f5" stroke="#fed7aa" stroke-width="1.2"/>
+                <path d="M9 7V11" stroke="#AC3400" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="9" cy="13.5" r="0.75" fill="#AC3400"/>
+            </svg>
+            <div class="result-condition" style="font-size: 1.25rem;">No clear match found</div>
+        </div>
+        <div class="result-dept">Recommend seeing a General Physician for assessment</div>
+        {% endif %}
+
+        {% if explanation %}
+        <hr class="result-hr">
+        <p class="result-text">{{ explanation }}</p>
+        {% endif %}
+
+    </div>
+
+    <a href="{% url 'appointments:book' %}?department={{ result.department }}" class="btn-pd" style="margin-top: 0.25rem;">
+        Book an appointment &rarr;
+    </a>
+    {% endif %}
+
 </div>
 {% endblock %}

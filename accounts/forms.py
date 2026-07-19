@@ -14,13 +14,13 @@ class SignUpForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs.update({'class': 'form-control form-control-lg'})
+            field.widget.attrs.update({'class': 'field-input'})
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
         user.phone_number = self.cleaned_data.get('phone_number', '')
-        user.role = 'patient'  # signups via this form are always patients
+        user.role = 'patient'
         if commit:
             user.save()
         return user

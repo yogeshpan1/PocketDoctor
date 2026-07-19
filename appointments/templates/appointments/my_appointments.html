@@ -1,41 +1,47 @@
-{% extends "home.html" %}
-{% block title %}My Appointments - Pocket Doctor{% endblock %}
+{% extends "base.html" %}
+{% block title %}My Appointments — Pocket Doctor{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold mb-0">My Appointments</h2>
-    <a href="{% url 'appointments:book' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>New Appointment</a>
-</div>
+<div class="appt-wrap">
 
-{% if appointments %}
-<div class="card border-0 shadow-sm rounded-4">
-    <div class="table-responsive">
-        <table class="table table-hover mb-0 align-middle">
-            <thead class="table-light">
+    <div class="appt-header">
+        <div>
+            <p class="page-eyebrow">Your records</p>
+            <h1 class="page-title" style="margin-bottom: 0;">My Appointments</h1>
+        </div>
+        <a href="{% url 'appointments:book' %}" class="btn-pd" style="font-size: 0.8rem; padding: 0.5rem 1.1rem;">
+            + New appointment
+        </a>
+    </div>
+
+    {% if appointments %}
+    <div class="table-card fade-up">
+        <table class="pd-table">
+            <thead>
                 <tr>
-                    <th class="ps-4">Doctor</th>
+                    <th>Doctor</th>
                     <th>Problem</th>
                     <th>Date</th>
                     <th>Time</th>
-                    <th class="pe-4">Status</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 {% for appt in appointments %}
                 <tr>
-                    <td class="ps-4 fw-semibold">Dr. {{ appt.doctor.name }}</td>
-                    <td class="text-muted">{{ appt.problem|truncatechars:40 }}</td>
+                    <td class="td-doctor">Dr. {{ appt.doctor.name }}</td>
+                    <td class="td-problem">{{ appt.problem|truncatechars:42 }}</td>
                     <td>{{ appt.date }}</td>
                     <td>{{ appt.time }}</td>
-                    <td class="pe-4">
+                    <td>
                         {% if appt.status == 'pending' %}
-                            <span class="badge rounded-pill text-bg-warning">Pending</span>
+                            <span class="status-badge badge-pending">Pending</span>
                         {% elif appt.status == 'confirmed' %}
-                            <span class="badge rounded-pill text-bg-success">Confirmed</span>
+                            <span class="status-badge badge-confirmed">Confirmed</span>
                         {% elif appt.status == 'cancelled' %}
-                            <span class="badge rounded-pill text-bg-danger">Cancelled</span>
+                            <span class="status-badge badge-cancelled">Cancelled</span>
                         {% else %}
-                            <span class="badge rounded-pill text-bg-secondary">Completed</span>
+                            <span class="status-badge badge-completed">Completed</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -43,12 +49,12 @@
             </tbody>
         </table>
     </div>
+    {% else %}
+    <div class="empty-card fade-up">
+        <p>You have no appointments yet.</p>
+        <a href="{% url 'appointments:book' %}" class="btn-pd">Book your first appointment</a>
+    </div>
+    {% endif %}
+
 </div>
-{% else %}
-<div class="card border-0 shadow-sm rounded-4 p-5 text-center">
-    <i class="fas fa-calendar-xmark fa-2x text-muted mb-3"></i>
-    <p class="text-muted mb-3">You have no appointments yet.</p>
-    <a href="{% url 'appointments:book' %}" class="btn btn-primary mx-auto" style="width:fit-content;">Book your first appointment</a>
-</div>
-{% endif %}
 {% endblock %}

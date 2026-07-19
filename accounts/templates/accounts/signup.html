@@ -1,35 +1,95 @@
-{% extends "home.html" %}
-{% block title %}Sign Up - Pocket Doctor{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account — Pocket Doctor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* Hide Django's default UL bullet list on password help text */
+        .field-input-wrap ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .field-input-wrap ul li {
+            font-size: 0.72rem;
+            color: #9ca3af;
+            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body data-no-dark="true">
 
-{% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-sm border-0 rounded-4 p-4 mt-4">
-            <div class="text-center mb-4">
-                <div class="mx-auto mb-3" style="width:56px;height:56px;border-radius:14px;background:#e6f7ee;display:flex;align-items:center;justify-content:center;">
-                    <i class="fas fa-user-plus" style="color:#16a34a;font-size:22px;"></i>
-                </div>
-                <h3 class="fw-bold">Create your account</h3>
-                <p class="text-muted">Join Pocket Doctor to get started</p>
-            </div>
-            <form method="POST">
-                {% csrf_token %}
-                {% for field in form %}
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.help_text %}
-                        <div class="form-text">{{ field.help_text }}</div>
-                    {% endif %}
-                    {% for error in field.errors %}
-                        <div class="text-danger small mt-1">{{ error }}</div>
+<div class="auth-layout">
+
+    <!-- LEFT: always cream/light -->
+    <div class="auth-left">
+        <a href="{% url 'home' %}" class="auth-logo">
+            <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true">
+                <path d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z" fill="#AC3400"/>
+            </svg>
+            Pocket Doctor
+        </a>
+
+        <div class="auth-form-area">
+            <div class="auth-form-box" style="max-width: 420px;">
+                <h1 class="auth-heading">Create an account</h1>
+                <p class="auth-subtext">Join Pocket Doctor to access AI-guided triage and instant booking.</p>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="field-group">
+                        <label class="field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="field-input-wrap">
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="field-help">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% for error in field.errors %}
+                                <div class="field-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
                     {% endfor %}
-                </div>
-                {% endfor %}
-                <button type="submit" class="btn btn-primary btn-lg w-100 mt-2">Sign Up</button>
-            </form>
-            <p class="text-center text-muted mt-4 mb-0">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+                    <button type="submit" class="btn-form">Create Account &rarr;</button>
+                </form>
+
+                <p class="form-note">
+                    Already have an account?
+                    <a href="{% url 'login' %}" class="form-link">Log in</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="auth-bottom">
+            Pocket Doctor &copy; 2026
         </div>
     </div>
+
+    <!-- RIGHT: always sage, no toggle -->
+    <div class="auth-right-sage">
+        <div class="auth-panel">
+            <div class="auth-panel-icon auth-panel-icon-sage">
+                <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true">
+                    <path d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z" fill="#111318"/>
+                </svg>
+            </div>
+            <h2 class="auth-panel-heading">Stop guessing your symptoms. Start getting treatment.</h2>
+            <ul class="auth-panel-list">
+                <li>AI-matched to the right specialist</li>
+                <li>Honest confidence — no false certainty</li>
+                <li>Instant appointment booking</li>
+            </ul>
+        </div>
+    </div>
+
 </div>
-{% endblock %}
+
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

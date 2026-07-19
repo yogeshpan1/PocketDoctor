@@ -1,55 +1,65 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" id="pd-html">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Pocket Doctor{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-
-<nav class="pd-nav">
-    <div class="pd-nav-inner">
-
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body>
+    <nav class="pd-nav">
+      <div class="pd-nav-inner">
         <a href="{% url 'home' %}" class="pd-brand">
-            <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z" fill="#AC3400"/>
-            </svg>
-            Pocket Doctor
+          <svg
+            width="16"
+            height="14"
+            viewBox="0 0 16 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z"
+              fill="#AC3400"
+            />
+          </svg>
+          Pocket Doctor
         </a>
 
         <div class="pd-nav-center">
-            {% if user.is_authenticated %}
-                <a href="{% url 'triage' %}">Checker</a>
-                <a href="{% url 'appointments:my_appointments' %}">My Appointments</a>
-            {% endif %}
+          {% if user.is_authenticated %}
+          <a href="{% url 'triage' %}">Checker</a>
+          <a href="{% url 'appointments:my_appointments' %}">My Appointments</a>
+          {% endif %}
         </div>
 
         <div class="pd-nav-right">
-            {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}" class="pd-nav-link">Logout</a>
-            {% else %}
-                <a href="{% url 'login' %}" class="pd-nav-link">Log in</a>
-                <a href="{% url 'signup' %}" class="btn-pd">Get started</a>
-            {% endif %}
-            <button class="btn-dark-toggle" id="pd-dark-toggle">Dark</button>
+          {% if user.is_authenticated %}
+          <span class="pd-nav-link" style="color: #111318; font-weight: 600"
+            >{{ user.username }}</span
+          >
+          <a href="{% url 'logout' %}" class="pd-nav-link">Logout</a>
+          {% else %}
+          <a href="{% url 'login' %}" class="pd-nav-link">Log in</a>
+          <a href="{% url 'signup' %}" class="btn-pd">Get started</a>
+          {% endif %}
         </div>
+      </div>
+    </nav>
 
+    {% if messages %}
+    <div class="messages-wrap">
+      {% for message in messages %}
+      <div class="msg msg-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
     </div>
-</nav>
+    {% endif %} {% block content %}{% endblock %}
 
-{% if messages %}
-<div class="messages-wrap">
-    {% for message in messages %}
-    <div class="msg msg-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-</div>
-{% endif %}
-
-{% block content %}{% endblock %}
-
-<script src="{% static 'js/main.js' %}"></script>
-</body>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
 </html>

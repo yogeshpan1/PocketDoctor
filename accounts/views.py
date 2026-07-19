@@ -14,8 +14,6 @@ def signup_view(request):
             login(request, user)  # auto-login after signup
             messages.success(request, 'Account created successfully!')
             return redirect('home')
-        else:
-            messages.error(request, 'Please fix the errors below.')
     else:
         form = SignUpForm()
     return render(request, 'accounts/signup.html', {'form': form})

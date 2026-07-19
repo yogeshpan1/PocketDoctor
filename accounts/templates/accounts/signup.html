@@ -73,20 +73,52 @@
 
     <!-- RIGHT: always sage, no toggle -->
     <div class="auth-right-sage">
-        <div class="auth-panel">
-            <div class="auth-panel-icon auth-panel-icon-sage">
-                <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true">
-                    <path d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z" fill="#111318"/>
-                </svg>
-            </div>
-            <h2 class="auth-panel-heading">Stop guessing your symptoms. Start getting treatment.</h2>
-            <ul class="auth-panel-list">
-                <li>AI-matched to the right specialist</li>
-                <li>Honest confidence — no false certainty</li>
-                <li>Instant appointment booking</li>
-            </ul>
+    <div class="auth-panel">
+        <div class="auth-panel-icon auth-panel-icon-sage">
+            <svg width="16" height="14" viewBox="0 0 16 14" fill="none" aria-hidden="true">
+                <path d="M8 13C8 13 1 8.5 1 4.5C1 2.567 2.567 1 4.5 1C5.896 1 7.107 1.797 7.688 2.967C8.269 1.797 9.48 1 10.875 1C12.808 1 14.375 2.567 14.375 4.5C14.375 8.5 8 13 8 13Z" fill="#111318"/>
+            </svg>
         </div>
+        <h2 class="auth-panel-heading" id="rotatingQuote">Stop guessing your symptoms. Start getting treatment.</h2>
+        <ul class="auth-panel-list" id="rotatingList">
+            <li>AI-matched to the right specialist</li>
+            <li>Honest confidence — no false certainty</li>
+            <li>Instant appointment booking</li>
+        </ul>
     </div>
+</div>
+
+{% if not messages %}
+<script>
+    var quotes = [
+        {
+            heading: "Stop guessing your symptoms. Start getting treatment.",
+            points: ["AI-matched to the right specialist", "Honest confidence — no false certainty", "Instant appointment booking"]
+        },
+        {
+            heading: "Your symptoms, understood in seconds.",
+            points: ["Trained on real clinical text data", "No sign-up required to see how it works", "Book the same day, if slots are open"]
+        },
+        {
+            heading: "Built for clarity, not alarm.",
+            points: ["Plain language, no medical jargon", "Tells you when it isn't sure", "You always see the reasoning"]
+        }
+    ];
+    var idx = 0;
+    setInterval(function () {
+        idx = (idx + 1) % quotes.length;
+        var q = quotes[idx];
+        document.getElementById('rotatingQuote').textContent = q.heading;
+        var list = document.getElementById('rotatingList');
+        list.innerHTML = '';
+        q.points.forEach(function (p) {
+            var li = document.createElement('li');
+            li.textContent = p;
+            list.appendChild(li);
+        });
+    }, 4000);
+</script>
+{% endif %}
 
 </div>
 

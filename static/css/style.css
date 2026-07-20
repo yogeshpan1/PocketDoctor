@@ -1001,3 +1001,19 @@ img { display: block; max-width: 100%; }
     50% { stroke-dashoffset: 0; opacity: 1; }
     100% { stroke-dashoffset: -1000; opacity: 0.3; }
 }
+
+.auth-form-box .field-group {
+    margin-bottom: 1rem;
+}
+
+.auth-form-box .field-label {
+    margin-bottom: 0.35rem;
+}
+
+.auth-heading {
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtext {
+    margin-bottom: 1.75rem;
+}

@@ -22,6 +22,16 @@ def signup_view(request):
 class CustomLoginView(LoginView):
     template_name = 'accounts/login.html'
 
+    def form_valid(self, form):
+        # Clear any leftover queued messages from a previous session/user
+        # before logging in, so stale messages don't appear on this user's
+        # first page after login.
+        storage = messages.get_messages(self.request)
+        for _ in storage:
+            pass  # iterating consumes/clears the storage
+        storage.used = True
+        return super().form_valid(form)
+
 
 def logout_view(request):
     logout(request)

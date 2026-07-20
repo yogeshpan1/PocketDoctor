@@ -3,11 +3,6 @@ from django.conf import settings
 
 
 class Doctor(models.Model):
-    """
-    A doctor profile. Kept separate from the User model —
-    not every doctor needs a login account right away, and
-    admins can manage doctor listings without creating users.
-    """
     DEPARTMENT_CHOICES = [
         ('general', 'General Physician'),
         ('cardiology', 'Cardiologist'),
@@ -20,6 +15,17 @@ class Doctor(models.Model):
         ('psychiatry', 'Psychiatrist'),
     ]
 
+    # Links a Doctor record to a real login account.
+    # Nullable because we already have Doctor rows created via admin
+    # before this field existed — not every Doctor needs a login yet.
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='doctor_profile'
+    )
+
     name = models.CharField(max_length=100)
     department = models.CharField(max_length=30, choices=DEPARTMENT_CHOICES)
     bio = models.TextField(blank=True)
@@ -30,7 +36,6 @@ class Doctor(models.Model):
 
 
 class DoctorTimeSlot(models.Model):
-    """A recurring weekly slot a doctor is available in."""
     DAY_CHOICES = [
         ('mon', 'Monday'), ('tue', 'Tuesday'), ('wed', 'Wednesday'),
         ('thu', 'Thursday'), ('fri', 'Friday'), ('sat', 'Saturday'), ('sun', 'Sunday'),
@@ -47,7 +52,6 @@ class DoctorTimeSlot(models.Model):
 
 
 class Appointment(models.Model):
-    """A booked appointment, linked to a real User instead of a raw email string."""
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('confirmed', 'Confirmed'),
@@ -69,3 +73,28 @@ class Appointment(models.Model):
 
     class Meta:
         ordering = ['-date', '-time']
+
+
+class Message(models.Model):
+    """A message from a doctor to a patient, tied to a specific appointment."""
+    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages')
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Message from {self.sender.username} on appointment #{self.appointment_id}"
+
+
+class Prescription(models.Model):
+    """A prescription a doctor writes for a specific appointment."""
+    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, related_name='prescription')
+    medicines = models.TextField(help_text="One medicine per line, e.g. 'Paracetamol 500mg - twice daily'")
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Prescription for appointment #{self.appointment_id}"

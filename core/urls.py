@@ -7,5 +7,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('triage/', include('triage.urls')),
     path('appointments/', include('appointments.urls')),
+    path('doctors/', include('doctors.urls')),
     path('', home_view, name='home'),
 ]

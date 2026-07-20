@@ -7,7 +7,10 @@ from .models import Doctor, Appointment
 
 @login_required
 def book_appointment(request):
-    # Pre-fill department filter if coming from the triage page
+    if hasattr(request.user, 'doctor_profile') and request.user.doctor_profile is not None:
+        messages.error(request, "Doctor accounts can't book appointments.")
+        return redirect('doctors:dashboard')
+
     department = request.GET.get('department')
 
     if request.method == 'POST':
@@ -21,7 +24,6 @@ def book_appointment(request):
     else:
         form = AppointmentForm()
         if department:
-            # Filter the doctor dropdown to matching department, if possible
             matching_doctors = Doctor.objects.filter(department__icontains=department.split()[0])
             if matching_doctors.exists():
                 form.fields['doctor'].queryset = matching_doctors
@@ -31,5 +33,9 @@ def book_appointment(request):
 
 @login_required
 def my_appointments(request):
+    if hasattr(request.user, 'doctor_profile') and request.user.doctor_profile is not None:
+        messages.error(request, "Doctor accounts don't have patient appointments.")
+        return redirect('doctors:dashboard')
+
     appointments = Appointment.objects.filter(patient=request.user)
     return render(request, 'appointments/my_appointments.html', {'appointments': appointments})

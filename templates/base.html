@@ -32,10 +32,12 @@
         </a>
 
         <div class="pd-nav-center">
-          {% if user.is_authenticated %}
+          {% if user.is_authenticated %} {% if user.doctor_profile %}
+          <a href="{% url 'doctors:dashboard' %}">My Patients</a>
+          {% else %}
           <a href="{% url 'triage' %}">Checker</a>
           <a href="{% url 'appointments:my_appointments' %}">My Appointments</a>
-          {% endif %}
+          {% endif %} {% endif %}
         </div>
 
         <div class="pd-nav-right">

@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Patients — Pocket Doctor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="doc-shell">
+
+    <aside class="doc-sidebar">
+        <div class="doc-sidebar-header">
+            <div class="doc-avatar">{{ request.user.username|slice:":1"|upper }}</div>
+            <div>
+                <div class="doc-sidebar-name">{{ request.user.username }}</div>
+                <div class="doc-sidebar-role">Administrator</div>
+            </div>
+        </div>
+        <ul class="doc-nav">
+            <li><a href="{% url 'staffadmin:dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'staffadmin:manage_doctors' %}">Doctors</a></li>
+            <li><a href="{% url 'staffadmin:manage_patients' %}" class="active">Patients</a></li>
+        </ul>
+        <div class="doc-logout">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </aside>
+
+    <main class="doc-main">
+
+        {% if messages %}
+        <div style="margin-bottom: 1.5rem;">
+            {% for message in messages %}
+            <div class="msg msg-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="doc-header">
+            <div>
+                <h1 class="doc-title">Patients</h1>
+                <p class="doc-subtitle">Patients sign up themselves — admins can only suspend accounts here, not create them.</p>
+            </div>
+        </div>
+
+        <section class="doc-section">
+            <table class="doc-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Joined</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                        <td class="patient-name">{{ patient.username }}</td>
+                        <td>{{ patient.email }}</td>
+                        <td>{{ patient.date_joined|date:"M d, Y" }}</td>
+                        <td>
+                            {% if patient.is_active %}
+                                <span class="doc-chip chip-confirmed">Active</span>
+                            {% else %}
+                                <span class="doc-chip chip-cancelled">Suspended</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="POST" action="{% url 'staffadmin:toggle_patient_active' patient.id %}">
+                                {% csrf_token %}
+                                {% if patient.is_active %}
+                                    <button type="submit" class="action-btn-deactivate">Suspend</button>
+                                {% else %}
+                                    <button type="submit" class="action-btn-activate">Reactivate</button>
+                                {% endif %}
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+</div>
+
+</body>
+</html>

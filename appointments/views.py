@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import AppointmentForm
-from .models import Doctor, Appointment
+from .models import Doctor, Appointment, Message
 
 
 @login_required
@@ -39,3 +39,26 @@ def my_appointments(request):
 
     appointments = Appointment.objects.filter(patient=request.user)
     return render(request, 'appointments/my_appointments.html', {'appointments': appointments})
+
+
+@login_required
+def appointment_detail(request, appointment_id):
+    # get_object_or_404 with patient=request.user ensures a patient
+    # can only ever view their own appointments, not anyone else's
+    appointment = get_object_or_404(Appointment, id=appointment_id, patient=request.user)
+
+    if request.method == 'POST':
+        body = request.POST.get('body', '').strip()
+        if body:
+            Message.objects.create(appointment=appointment, sender=request.user, body=body)
+            messages.success(request, 'Message sent.')
+        return redirect('appointments:appointment_detail', appointment_id=appointment.id)
+
+    thread = appointment.messages.all()
+    prescription = getattr(appointment, 'prescription', None)
+
+    return render(request, 'appointments/appointment_detail.html', {
+        'appointment': appointment,
+        'thread': thread,
+        'prescription': prescription,
+    })

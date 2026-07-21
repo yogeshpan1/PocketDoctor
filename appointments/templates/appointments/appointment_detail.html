@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Appointment Details — Pocket Doctor{% endblock %}
+
+{% block content %}
+<div class="appt-wrap">
+
+    <a href="{% url 'appointments:my_appointments' %}" class="btn-ghost" style="display:inline-block; margin-bottom: 1.5rem;">&larr; Back to My Appointments</a>
+
+    <div class="appt-header">
+        <div>
+            <p class="page-eyebrow">Appointment</p>
+            <h1 class="page-title" style="margin-bottom: 0;">Dr. {{ appointment.doctor.name }}</h1>
+            <p class="doc-subtitle" style="margin-top: 0.4rem;">{{ appointment.date }} at {{ appointment.time }}</p>
+        </div>
+    </div>
+
+    <div class="patient-detail-grid">
+
+        <!-- LEFT: problem + messages -->
+        <div>
+            <section class="table-card" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+                <h3 class="result-condition" style="font-size: 1.1rem; margin-bottom: 0.75rem;">Your Description</h3>
+                <div class="symptom-input" style="min-height: auto; background: #faf9f5; cursor: default;">{{ appointment.problem }}</div>
+            </section>
+
+            <section class="table-card" style="padding: 1.5rem;">
+                <h3 class="result-condition" style="font-size: 1.1rem; margin-bottom: 1rem;">Messages</h3>
+
+                <div class="patient-msg-thread">
+                    {% if thread %}
+                        {% for m in thread %}
+                        <div class="patient-msg-bubble {% if m.sender == request.user %}patient-msg-from-me{% else %}patient-msg-from-doctor{% endif %}">
+                            <div class="patient-msg-meta">
+                                {% if m.sender == request.user %}You{% else %}Dr. {{ appointment.doctor.name }}{% endif %}
+                                &middot; {{ m.created_at|date:"M d, g:i A" }}
+                            </div>
+                            {{ m.body }}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="font-family:'Inter',sans-serif; font-size:0.85rem; color:#9ca3af;">No messages yet.</p>
+                    {% endif %}
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <textarea name="body" class="symptom-textarea" style="min-height: 70px;" placeholder="Write a message to your doctor..."></textarea>
+                    <button type="submit" class="btn-pd" style="margin-top: 0.75rem;">Send Message</button>
+                </form>
+            </section>
+        </div>
+
+        <!-- RIGHT: prescription -->
+        <div>
+            <div class="patient-rx-card">
+                <h3 class="result-condition" style="font-size: 1.1rem; margin-bottom: 1rem;">Prescription</h3>
+
+                {% if prescription %}
+                    <div style="margin-bottom: 1rem;">
+                        <div class="result-dept" style="margin-bottom: 0.4rem;">Medicines</div>
+                        <div style="font-family:'Inter',sans-serif; font-size:0.86rem; white-space: pre-line; line-height: 1.7;">{{ prescription.medicines }}</div>
+                    </div>
+                    {% if prescription.notes %}
+                    <div>
+                        <div class="result-dept" style="margin-bottom: 0.4rem;">Notes</div>
+                        <div style="font-family:'Inter',sans-serif; font-size:0.85rem; color:#5c5f66; line-height: 1.6;">{{ prescription.notes }}</div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <p class="patient-rx-empty">No prescription has been issued yet for this appointment.</p>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

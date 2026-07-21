@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 {% for appt in appointments %}
-                <tr>
+                <tr onclick="window.location='{% url 'appointments:appointment_detail' appt.id %}'" style="cursor: pointer;">
                     <td class="td-doctor">Dr. {{ appt.doctor.name }}</td>
                     <td class="td-problem">{{ appt.problem|truncatechars:42 }}</td>
                     <td>{{ appt.date }}</td>

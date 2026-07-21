@@ -49,14 +49,15 @@ Triage{% endblock %} {% block content %}
         </div>
         {% if featured_doctor %}
         <div class="m-doctor">
-          <div>
-            <div class="m-doctor-name">Dr. {{ featured_doctor.name }}</div>
-            <div class="m-doctor-avail">
-              {{ featured_doctor.get_department_display }}
-            </div>
-          </div>
-          <button class="m-book">Book Now</button>
-        </div>
+                    <div>
+                        <div class="m-doctor-name">Dr. {{ featured_doctor.name }}</div>
+                        <div class="m-doctor-avail">{{ featured_doctor.get_department_display }}</div>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'appointments:book' %}" class="m-book" style="text-decoration:none; display:inline-block;">Book Now</a>
+                    {% else %}
+                        <a href="{% url 'signup' %}" class="m-book" style="text-decoration:none; display:inline-block;">Book Now</a>
+                    {% endif %}
         {% endif %}
       </div>
     </div>

@@ -23,14 +23,17 @@ class CustomLoginView(LoginView):
     template_name = 'accounts/login.html'
 
     def form_valid(self, form):
-        # Clear any leftover queued messages from a previous session/user
-        # before logging in, so stale messages don't appear on this user's
-        # first page after login.
         storage = messages.get_messages(self.request)
         for _ in storage:
-            pass  # iterating consumes/clears the storage
+            pass
         storage.used = True
         return super().form_valid(form)
+
+    def get_success_url(self):
+        user = self.request.user
+        if hasattr(user, 'doctor_profile') and user.doctor_profile is not None:
+            return '/doctors/'
+        return '/'
 
 
 def logout_view(request):

@@ -109,10 +109,7 @@ Triage{% endblock %} {% block content %}
       <div class="fade-up" data-delay="{{ forloop.counter0|add:'0' }}00">
         <p class="feature-num">{{ doc.get_department_display }}</p>
         <h4 class="feature-name">Dr. {{ doc.name }}</h4>
-        <p class="feature-desc">
-          {{ doc.bio|default:"Available for appointments through Pocket Doctor."
-          }}
-        </p>
+        <p class="feature-desc">{{ doc.bio|default:"Available for appointments through Pocket Doctor." }}</p>
       </div>
       {% endfor %}
     </div>

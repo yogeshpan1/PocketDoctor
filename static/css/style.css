@@ -1654,3 +1654,39 @@ img { display: block; max-width: 100%; }
 @media (max-width: 1000px) {
     .admin-stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+.action-btn-deactivate {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: #ffffff;
+    border: 1px solid #b91c1c;
+    color: #b91c1c;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.action-btn-deactivate:hover {
+    background: #b91c1c;
+    color: #ffffff;
+}
+
+.action-btn-activate {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: #ffffff;
+    border: 1px solid #15803d;
+    color: #15803d;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.action-btn-activate:hover {
+    background: #15803d;
+    color: #ffffff;
+}

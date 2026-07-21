@@ -76,9 +76,11 @@
                         <td>
                             <form method="POST" action="{% url 'staffadmin:toggle_doctor_active' doctor.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="doc-side-btn-outline" style="width:auto; padding:0.4rem 1rem; font-size:0.72rem;">
-                                    {% if doctor.is_active %}Deactivate{% else %}Activate{% endif %}
-                                </button>
+                                {% if doctor.is_active %}
+                                    <button type="submit" class="action-btn-deactivate">Deactivate</button>
+                                {% else %}
+                                    <button type="submit" class="action-btn-activate">Activate</button>
+                                {% endif %}
                             </form>
                         </td>
                     </tr>

@@ -77,4 +77,14 @@
         }, 900);
     });
 
+    // Auto-grow textareas (used on prescription form)
+    document.querySelectorAll('.rx-textarea').forEach(function (el) {
+        function resize() {
+            el.style.height = 'auto';
+            el.style.height = el.scrollHeight + 'px';
+        }
+        el.addEventListener('input', resize);
+        resize(); // run once on load in case there's existing content (edit mode)
+    });
+
 })();

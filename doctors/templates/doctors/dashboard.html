@@ -80,7 +80,7 @@
                 </thead>
                 <tbody>
                     {% for appt in appointments %}
-                    <tr onclick="window.location='#'">
+                    <tr onclick="window.location='{% url 'doctors:appointment_detail' appt.id %}'">
                         <td class="patient-name">{{ appt.patient.username }}</td>
                         <td class="problem-cell">{{ appt.problem|truncatechars:40 }}</td>
                         <td>{{ appt.date }}</td>

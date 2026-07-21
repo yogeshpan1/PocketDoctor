@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment — Pocket Doctor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="doc-shell">
+
+    <aside class="doc-sidebar">
+        <div class="doc-sidebar-header">
+            <div class="doc-avatar">{{ doctor.name|slice:":1" }}</div>
+            <div>
+                <div class="doc-sidebar-name">Dr. {{ doctor.name }}</div>
+                <div class="doc-sidebar-role">{{ doctor.get_department_display }}</div>
+            </div>
+        </div>
+        <ul class="doc-nav">
+            <li><a href="{% url 'doctors:dashboard' %}">Dashboard</a></li>
+        </ul>
+        <div class="doc-logout">
+            <a href="{% url 'logout' %}" class="pd-nav-link" style="font-family:'Inter',sans-serif;font-size:0.8rem;">Logout</a>
+        </div>
+    </aside>
+
+    <main class="doc-main">
+
+        {% if messages %}
+        <div style="margin-bottom: 1.5rem;">
+            {% for message in messages %}
+            <div class="msg msg-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <a href="{% url 'doctors:dashboard' %}" class="doc-back-link">&larr; Back to Dashboard</a>
+
+        <div class="doc-header">
+            <div>
+                <h1 class="doc-title">{{ appointment.patient.username }}</h1>
+                <p class="doc-subtitle">Appointment on {{ appointment.date }} at {{ appointment.time }}</p>
+            </div>
+        </div>
+
+        <div class="doc-detail-grid">
+
+            <!-- LEFT: problem + messages -->
+            <div>
+                <section class="doc-section" style="margin-bottom: 1.5rem;">
+                    <div class="doc-section-header">
+                        <h2 class="doc-section-title">Patient's Description</h2>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <div class="doc-problem-box" style="margin-top: 0;">{{ appointment.problem }}</div>
+                    </div>
+                </section>
+
+                <section class="doc-section">
+                    <div class="doc-section-header">
+                        <h2 class="doc-section-title">Messages</h2>
+                    </div>
+                    <div style="padding: 1.5rem;">
+
+                        <div class="msg-thread">
+                            {% if thread %}
+                                {% for m in thread %}
+                                <div class="msg-bubble {% if m.sender == request.user %}msg-bubble-doctor{% else %}msg-bubble-patient{% endif %}">
+                                    <div class="msg-bubble-meta">{{ m.sender.username }} &middot; {{ m.created_at|date:"M d, g:i A" }}</div>
+                                    {{ m.body }}
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="msg-empty">No messages yet. Start the conversation below.</div>
+                            {% endif %}
+                        </div>
+
+                        <form method="POST" class="msg-form">
+                            {% csrf_token %}
+                            <textarea name="body" placeholder="Write a message to the patient..."></textarea>
+                            <button type="submit" name="send_message" value="1" class="doc-side-btn" style="width: auto; padding: 0.6rem 1.5rem;">Send</button>
+                        </form>
+
+                    </div>
+                </section>
+            </div>
+
+            <!-- RIGHT: appointment info + actions -->
+            <div>
+                <div class="doc-side-card">
+                    <div class="doc-side-card-title">Appointment Info</div>
+                    <div class="doc-info-row">
+                        <span class="doc-info-label">Status</span>
+                        <span class="doc-info-value">{{ appointment.get_status_display }}</span>
+                    </div>
+                    <div class="doc-info-row">
+                        <span class="doc-info-label">Date</span>
+                        <span class="doc-info-value">{{ appointment.date }}</span>
+                    </div>
+                    <div class="doc-info-row">
+                        <span class="doc-info-label">Time</span>
+                        <span class="doc-info-value">{{ appointment.time }}</span>
+                    </div>
+                    <div class="doc-info-row">
+                        <span class="doc-info-label">Patient</span>
+                        <span class="doc-info-value">{{ appointment.patient.username }}</span>
+                    </div>
+
+                    <form method="POST" class="doc-status-form" style="margin-top: 1.25rem;">
+                        {% csrf_token %}
+                        <select name="status">
+                            {% for value, label in appointment.STATUS_CHOICES %}
+                            <option value="{{ value }}" {% if appointment.status == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" name="update_status" value="1" class="doc-side-btn-outline">Update Status</button>
+                    </form>
+                </div>
+
+                <div class="doc-side-card">
+                    <div class="doc-side-card-title">Prescription</div>
+                    {% if has_prescription %}
+                        <p style="font-family:'Inter',sans-serif; font-size:0.82rem; color:#5c5f66; margin-bottom: 0.75rem;">A prescription has been written for this appointment.</p>
+                        <a href="{% url 'doctors:view_prescription' appointment.id %}" class="doc-side-btn-outline" style="display:block; text-align:center; text-decoration:none;">View Prescription</a>
+                    {% else %}
+                        <p style="font-family:'Inter',sans-serif; font-size:0.82rem; color:#5c5f66; margin-bottom: 0.75rem;">No prescription written yet.</p>
+                        <a href="{% url 'doctors:write_prescription' appointment.id %}" class="doc-side-btn" style="display:block; text-align:center; text-decoration:none;">Write Prescription</a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription — Pocket Doctor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="doc-shell">
+
+    <aside class="doc-sidebar">
+        <div class="doc-sidebar-header">
+            <div class="doc-avatar">{{ doctor.name|slice:":1" }}</div>
+            <div>
+                <div class="doc-sidebar-name">Dr. {{ doctor.name }}</div>
+                <div class="doc-sidebar-role">{{ doctor.get_department_display }}</div>
+            </div>
+        </div>
+        <ul class="doc-nav">
+            <li><a href="{% url 'doctors:dashboard' %}">Dashboard</a></li>
+        </ul>
+        <div class="doc-logout">
+            <a href="{% url 'logout' %}" class="pd-nav-link" style="font-family:'Inter',sans-serif;font-size:0.8rem;">Logout</a>
+        </div>
+    </aside>
+
+    <main class="doc-main">
+
+        <a href="{% url 'doctors:appointment_detail' appointment.id %}" class="doc-back-link">&larr; Back to Appointment</a>
+
+        <div class="doc-header">
+            <div>
+                <h1 class="doc-title">Prescription</h1>
+                <p class="doc-subtitle">{{ appointment.patient.username }} &middot; {{ appointment.date }}</p>
+            </div>
+            <a href="{% url 'doctors:write_prescription' appointment.id %}" class="doc-side-btn-outline" style="width: auto; padding: 0.6rem 1.5rem; text-decoration: none; display: inline-block;">Edit</a>
+        </div>
+
+        <div class="rx-pad" style="max-width: 640px;">
+            <div class="rx-pad-header">
+                <div>
+                    <div class="rx-pad-brand">Pocket Doctor</div>
+                    <div class="rx-pad-doctor">Dr. {{ doctor.name }} &mdash; {{ doctor.get_department_display }}</div>
+                </div>
+                <div class="rx-pad-date">{{ prescription.created_at|date:"F d, Y" }}</div>
+            </div>
+
+            <div class="rx-pad-section">
+                <div class="rx-pad-label">Patient</div>
+                <div class="rx-pad-medicines" style="white-space: normal;">{{ appointment.patient.username }}</div>
+            </div>
+
+            <div class="rx-pad-section">
+                <div class="rx-pad-label">Medicines</div>
+                <div class="rx-pad-medicines">{{ prescription.medicines }}</div>
+            </div>
+
+            {% if prescription.notes %}
+            <div class="rx-pad-section">
+                <div class="rx-pad-label">Notes</div>
+                <div class="rx-pad-notes">{{ prescription.notes }}</div>
+            </div>
+            {% endif %}
+
+            <div class="rx-pad-footer">
+                This prescription was issued digitally through Pocket Doctor and is tied to appointment #{{ appointment.id }}.
+            </div>
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>

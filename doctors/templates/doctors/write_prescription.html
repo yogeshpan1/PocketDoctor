@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write Prescription — Pocket Doctor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="doc-shell">
+
+    <aside class="doc-sidebar">
+        <div class="doc-sidebar-header">
+            <div class="doc-avatar">{{ doctor.name|slice:":1" }}</div>
+            <div>
+                <div class="doc-sidebar-name">Dr. {{ doctor.name }}</div>
+                <div class="doc-sidebar-role">{{ doctor.get_department_display }}</div>
+            </div>
+        </div>
+        <ul class="doc-nav">
+            <li><a href="{% url 'doctors:dashboard' %}">Dashboard</a></li>
+        </ul>
+        <div class="doc-logout">
+            <a href="{% url 'logout' %}" class="pd-nav-link" style="font-family:'Inter',sans-serif;font-size:0.8rem;">Logout</a>
+        </div>
+    </aside>
+
+    <main class="doc-main">
+
+        {% if messages %}
+        <div style="margin-bottom: 1.5rem;">
+            {% for message in messages %}
+            <div class="msg msg-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <a href="{% url 'doctors:appointment_detail' appointment.id %}" class="doc-back-link">&larr; Back to Appointment</a>
+
+        <div class="doc-header">
+            <div>
+                <h1 class="doc-title">{% if prescription %}Edit{% else %}Write{% endif %} Prescription</h1>
+                <p class="doc-subtitle">For {{ appointment.patient.username }} &middot; {{ appointment.date }}</p>
+            </div>
+        </div>
+
+        <div class="rx-form-card" style="max-width: 640px;">
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="rx-field-group">
+                    <label class="rx-label">Medicines</label>
+                    <textarea name="medicines" class="rx-textarea" placeholder="Paracetamol 500mg - twice daily, after meals&#10;Cetirizine 10mg - once daily at night">{% if prescription %}{{ prescription.medicines }}{% endif %}</textarea>
+                    <p class="rx-help">One medicine per line, including dosage and frequency.</p>
+                </div>
+
+                <div class="rx-field-group">
+                    <label class="rx-label">Additional Notes</label>
+                    <textarea name="notes" class="rx-textarea" style="min-height: 80px;" placeholder="Any additional instructions for the patient...">{% if prescription %}{{ prescription.notes }}{% endif %}</textarea>
+                </div>
+
+                <button type="submit" class="doc-side-btn" style="width: auto; padding: 0.75rem 2rem;">
+                    {% if prescription %}Update{% else %}Save{% endif %} Prescription
+                </button>
+            </form>
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>

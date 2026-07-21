@@ -1638,3 +1638,19 @@ img { display: block; max-width: 100%; }
 @media (max-width: 900px) {
     .patient-detail-grid { grid-template-columns: 1fr; }
 }
+
+/* =============================================
+   STAFF ADMIN DASHBOARD
+   Reuses .doc-shell/.doc-sidebar/.doc-main patterns
+   ============================================= */
+
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+@media (max-width: 1000px) {
+    .admin-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}

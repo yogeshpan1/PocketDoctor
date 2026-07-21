@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — Pocket Doctor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="doc-shell">
+
+    <aside class="doc-sidebar">
+        <div class="doc-sidebar-header">
+            <div class="doc-avatar">{{ request.user.username|slice:":1"|upper }}</div>
+            <div>
+                <div class="doc-sidebar-name">{{ request.user.username }}</div>
+                <div class="doc-sidebar-role">Administrator</div>
+            </div>
+        </div>
+
+        <ul class="doc-nav">
+            <li><a href="{% url 'staffadmin:dashboard' %}" class="active">Dashboard</a></li>
+            <li><a href="{% url 'staffadmin:manage_doctors' %}">Doctors</a></li>
+        </ul>
+
+        <div class="doc-logout">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </aside>
+
+    <main class="doc-main">
+
+        {% if messages %}
+        <div style="margin-bottom: 1.5rem;">
+            {% for message in messages %}
+            <div class="msg msg-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="doc-header">
+            <div>
+                <h1 class="doc-title">Admin Dashboard</h1>
+                <p class="doc-subtitle">System-wide overview</p>
+            </div>
+        </div>
+
+        <div class="admin-stats-grid">
+            <div class="doc-stat-card">
+                <div class="doc-stat-label">Total Patients</div>
+                <div class="doc-stat-num">{{ total_patients }}</div>
+            </div>
+            <div class="doc-stat-card">
+                <div class="doc-stat-label">Total Doctors</div>
+                <div class="doc-stat-num">{{ total_doctors }}</div>
+            </div>
+            <div class="doc-stat-card">
+                <div class="doc-stat-label">Total Appointments</div>
+                <div class="doc-stat-num">{{ total_appointments }}</div>
+            </div>
+            <div class="doc-stat-card">
+                <div class="doc-stat-label">Pending</div>
+                <div class="doc-stat-num">{{ pending_appointments }}</div>
+            </div>
+        </div>
+
+        <section class="doc-section">
+            <div class="doc-section-header">
+                <h2 class="doc-section-title">Recent Appointments</h2>
+            </div>
+
+            {% if recent_appointments %}
+            <table class="doc-table">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appt in recent_appointments %}
+                    <tr>
+                        <td class="patient-name">{{ appt.patient.username }}</td>
+                        <td>Dr. {{ appt.doctor.name }}</td>
+                        <td>{{ appt.date }}</td>
+                        <td>
+                            {% if appt.status == 'pending' %}
+                                <span class="doc-chip chip-pending">Pending</span>
+                            {% elif appt.status == 'confirmed' %}
+                                <span class="doc-chip chip-confirmed">Confirmed</span>
+                            {% elif appt.status == 'cancelled' %}
+                                <span class="doc-chip chip-cancelled">Cancelled</span>
+                            {% else %}
+                                <span class="doc-chip chip-completed">Completed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="doc-empty">No appointments in the system yet.</div>
+            {% endif %}
+        </section>
+
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Doctor — Pocket Doctor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="doc-shell">
+
+    <aside class="doc-sidebar">
+        <div class="doc-sidebar-header">
+            <div class="doc-avatar">{{ request.user.username|slice:":1"|upper }}</div>
+            <div>
+                <div class="doc-sidebar-name">{{ request.user.username }}</div>
+                <div class="doc-sidebar-role">Administrator</div>
+            </div>
+        </div>
+        <ul class="doc-nav">
+            <li><a href="{% url 'staffadmin:dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'staffadmin:manage_doctors' %}" class="active">Doctors</a></li>
+            <li><a href="{% url 'staffadmin:manage_patients' %}">Patients</a></li>
+        </ul>
+        <div class="doc-logout">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </aside>
+
+    <main class="doc-main">
+
+        {% if messages %}
+        <div style="margin-bottom: 1.5rem;">
+            {% for message in messages %}
+            <div class="msg msg-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <a href="{% url 'staffadmin:manage_doctors' %}" class="doc-back-link">&larr; Back to Doctors</a>
+
+        <div class="doc-header">
+            <div>
+                <h1 class="doc-title">Add Doctor</h1>
+            </div>
+        </div>
+
+        <div class="rx-form-card" style="max-width: 560px;">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="rx-field-group">
+                    <label class="rx-label">Name</label>
+                    <input type="text" name="name" class="field-input" placeholder="e.g. Sarah Sharma" required>
+                </div>
+                <div class="rx-field-group">
+                    <label class="rx-label">Department</label>
+                    <select name="department" class="field-input" required>
+                        <option value="">Select a department</option>
+                        {% for value, label in department_choices %}
+                        <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="rx-field-group">
+                    <label class="rx-label">Bio (optional)</label>
+                    <textarea name="bio" class="rx-textarea" placeholder="Short professional bio shown on the homepage..."></textarea>
+                </div>
+                <button type="submit" class="doc-side-btn" style="width: auto; padding: 0.75rem 2rem;">Add Doctor</button>
+            </form>
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>

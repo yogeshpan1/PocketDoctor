@@ -47,3 +47,38 @@ def toggle_doctor_active(request, doctor_id):
     status = 'activated' if doctor.is_active else 'deactivated'
     messages.success(request, f'Dr. {doctor.name} has been {status}.')
     return redirect('staffadmin:manage_doctors')
+
+
+@staff_required
+def add_doctor(request):
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        department = request.POST.get('department')
+        bio = request.POST.get('bio', '').strip()
+
+        if not name or not department:
+            messages.error(request, 'Name and department are required.')
+        else:
+            Doctor.objects.create(name=name, department=department, bio=bio)
+            messages.success(request, f'Dr. {name} added successfully.')
+            return redirect('staffadmin:manage_doctors')
+
+    return render(request, 'staffadmin/add_doctor.html', {
+        'department_choices': Doctor.DEPARTMENT_CHOICES,
+    })
+
+
+@staff_required
+def manage_patients(request):
+    patients = User.objects.filter(role='patient').order_by('username')
+    return render(request, 'staffadmin/manage_patients.html', {'patients': patients})
+
+
+@staff_required
+def toggle_patient_active(request, user_id):
+    patient = get_object_or_404(User, id=user_id, role='patient')
+    patient.is_active = not patient.is_active
+    patient.save()
+    status = 'activated' if patient.is_active else 'deactivated'
+    messages.success(request, f'{patient.username} has been {status}.')
+    return redirect('staffadmin:manage_patients')

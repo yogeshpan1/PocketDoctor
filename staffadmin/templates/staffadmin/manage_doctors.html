@@ -46,7 +46,7 @@
                 <h1 class="doc-title">Doctors</h1>
                 <p class="doc-subtitle">Manage doctor listings. Add new doctors from the Django admin panel.</p>
             </div>
-            <a href="/admin/appointments/doctor/add/" class="doc-side-btn" style="width:auto; padding:0.6rem 1.5rem; text-decoration:none;">+ Add Doctor</a>
+            <a href="{% url 'staffadmin:add_doctor' %}" class="doc-side-btn" style="width:auto; padding:0.6rem 1.5rem; text-decoration:none;">+ Add Doctor</a>
         </div>
 
         <section class="doc-section">

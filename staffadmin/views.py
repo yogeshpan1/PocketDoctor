@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from accounts.models import User
-from appointments.models import Doctor, Appointment, Message, Prescription
+from appointments.models import Doctor, Appointment, Message, Prescription, DoctorTimeSlot
 
 
 def staff_required(view_func):
@@ -93,4 +93,35 @@ def patient_detail(request, user_id):
     return render(request, 'staffadmin/patient_detail.html', {
         'patient': patient,
         'appointments': appointments,
+    })
+
+@staff_required
+def doctor_timeslots(request, doctor_id):
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+
+    if request.method == 'POST':
+        if 'add_slot' in request.POST:
+            day = request.POST.get('day_of_week')
+            start = request.POST.get('start_time')
+            end = request.POST.get('end_time')
+            if day and start and end:
+                DoctorTimeSlot.objects.create(
+                    doctor=doctor, day_of_week=day, start_time=start, end_time=end
+                )
+                messages.success(request, 'Time slot added.')
+            else:
+                messages.error(request, 'Please fill in all fields.')
+
+        if 'delete_slot' in request.POST:
+            slot_id = request.POST.get('slot_id')
+            DoctorTimeSlot.objects.filter(id=slot_id, doctor=doctor).delete()
+            messages.success(request, 'Time slot removed.')
+
+        return redirect('staffadmin:doctor_timeslots', doctor_id=doctor.id)
+
+    slots = doctor.time_slots.all().order_by('day_of_week', 'start_time')
+    return render(request, 'staffadmin/doctor_timeslots.html', {
+        'doctor': doctor,
+        'slots': slots,
+        'day_choices': DoctorTimeSlot.DAY_CHOICES,
     })

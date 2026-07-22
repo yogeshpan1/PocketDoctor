@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
-from appointments.models import Appointment, Message, Prescription
+from appointments.models import Appointment, Message, Prescription, DoctorTimeSlot
 
 
 def doctor_required(view_func):
@@ -112,4 +112,39 @@ def view_prescription(request, appointment_id):
         'doctor': doctor,
         'appointment': appointment,
         'prescription': prescription,
+    })
+
+
+@doctor_required
+def manage_timeslots(request):
+    doctor = request.user.doctor_profile
+
+    if request.method == 'POST':
+        if 'add_slot' in request.POST:
+            day = request.POST.get('day_of_week')
+            start = request.POST.get('start_time')
+            end = request.POST.get('end_time')
+            if day and start and end:
+                if start >= end:
+                    messages.error(request, 'End time must be after start time.')
+                else:
+                    DoctorTimeSlot.objects.create(
+                        doctor=doctor, day_of_week=day, start_time=start, end_time=end
+                    )
+                    messages.success(request, 'Time slot added.')
+            else:
+                messages.error(request, 'Please fill in all fields.')
+
+        if 'delete_slot' in request.POST:
+            slot_id = request.POST.get('slot_id')
+            DoctorTimeSlot.objects.filter(id=slot_id, doctor=doctor).delete()
+            messages.success(request, 'Time slot removed.')
+
+        return redirect('doctors:manage_timeslots')
+
+    slots = doctor.time_slots.all().order_by('day_of_week', 'start_time')
+    return render(request, 'doctors/manage_timeslots.html', {
+        'doctor': doctor,
+        'slots': slots,
+        'day_choices': DoctorTimeSlot.DAY_CHOICES,
     })

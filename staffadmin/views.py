@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from accounts.models import User
-from appointments.models import Doctor, Appointment, Message, Prescription, DoctorTimeSlot
+from appointments.models import Doctor, Appointment, Message, Prescription
 
 
 def staff_required(view_func):
@@ -55,16 +55,43 @@ def add_doctor(request):
         name = request.POST.get('name', '').strip()
         department = request.POST.get('department')
         bio = request.POST.get('bio', '').strip()
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
 
         if not name or not department:
             messages.error(request, 'Name and department are required.')
+            return render(request, 'staffadmin/add_doctor.html', {
+                'department_choices': Doctor.DEPARTMENT_CHOICES,
+            })
+
+        doctor = Doctor.objects.create(name=name, department=department, bio=bio)
+
+        # Optionally create a login account at the same time
+        if username and password:
+            if User.objects.filter(username=username).exists():
+                messages.warning(request, f'Doctor added, but username "{username}" already exists — link an account manually later.')
+            else:
+                doc_user = User.objects.create_user(username=username, password=password, role='doctor')
+                doctor.user = doc_user
+                doctor.save()
+                messages.success(request, f'Dr. {name} added with login account "{username}".')
         else:
-            Doctor.objects.create(name=name, department=department, bio=bio)
-            messages.success(request, f'Dr. {name} added successfully.')
-            return redirect('staffadmin:manage_doctors')
+            messages.success(request, f'Dr. {name} added (no login account created).')
+
+        return redirect('staffadmin:manage_doctors')
 
     return render(request, 'staffadmin/add_doctor.html', {
         'department_choices': Doctor.DEPARTMENT_CHOICES,
+    })
+
+
+@staff_required
+def doctor_detail(request, doctor_id):
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+    appointments = Appointment.objects.filter(doctor=doctor).order_by('-date')
+    return render(request, 'staffadmin/doctor_detail.html', {
+        'doctor': doctor,
+        'appointments': appointments,
     })
 
 
@@ -93,35 +120,4 @@ def patient_detail(request, user_id):
     return render(request, 'staffadmin/patient_detail.html', {
         'patient': patient,
         'appointments': appointments,
-    })
-
-@staff_required
-def doctor_timeslots(request, doctor_id):
-    doctor = get_object_or_404(Doctor, id=doctor_id)
-
-    if request.method == 'POST':
-        if 'add_slot' in request.POST:
-            day = request.POST.get('day_of_week')
-            start = request.POST.get('start_time')
-            end = request.POST.get('end_time')
-            if day and start and end:
-                DoctorTimeSlot.objects.create(
-                    doctor=doctor, day_of_week=day, start_time=start, end_time=end
-                )
-                messages.success(request, 'Time slot added.')
-            else:
-                messages.error(request, 'Please fill in all fields.')
-
-        if 'delete_slot' in request.POST:
-            slot_id = request.POST.get('slot_id')
-            DoctorTimeSlot.objects.filter(id=slot_id, doctor=doctor).delete()
-            messages.success(request, 'Time slot removed.')
-
-        return redirect('staffadmin:doctor_timeslots', doctor_id=doctor.id)
-
-    slots = doctor.time_slots.all().order_by('day_of_week', 'start_time')
-    return render(request, 'staffadmin/doctor_timeslots.html', {
-        'doctor': doctor,
-        'slots': slots,
-        'day_choices': DoctorTimeSlot.DAY_CHOICES,
     })

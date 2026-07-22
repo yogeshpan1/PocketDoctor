@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Availability — Pocket Doctor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="doc-shell">
+
+    <aside class="doc-sidebar">
+        <div class="doc-sidebar-header">
+            <div class="doc-avatar">{{ doctor.name|slice:":1" }}</div>
+            <div>
+                <div class="doc-sidebar-name">Dr. {{ doctor.name }}</div>
+                <div class="doc-sidebar-role">{{ doctor.get_department_display }}</div>
+            </div>
+        </div>
+        <ul class="doc-nav">
+            <li><a href="{% url 'doctors:dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'doctors:manage_timeslots' %}" class="active">Availability</a></li>
+        </ul>
+        <div class="doc-logout">
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </aside>
+
+    <main class="doc-main">
+
+        {% if messages %}
+        <div style="margin-bottom: 1.5rem;">
+            {% for message in messages %}
+            <div class="msg msg-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="doc-header">
+            <div>
+                <h1 class="doc-title">My Availability</h1>
+                <p class="doc-subtitle">Set the days and times you're available for appointments.</p>
+            </div>
+        </div>
+
+        <div class="doc-detail-grid">
+
+            <section class="doc-section">
+                <div class="doc-section-header">
+                    <h2 class="doc-section-title">Current Slots</h2>
+                </div>
+                {% if slots %}
+                <table class="doc-table">
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for slot in slots %}
+                        <tr>
+                            <td class="patient-name">{{ slot.get_day_of_week_display }}</td>
+                            <td>{{ slot.start_time }}</td>
+                            <td>{{ slot.end_time }}</td>
+                            <td>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="slot_id" value="{{ slot.id }}">
+                                    <button type="submit" name="delete_slot" value="1" class="action-btn-deactivate">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="doc-empty">You haven't set any availability yet. Add a slot to start accepting bookings.</div>
+                {% endif %}
+            </section>
+
+            <div class="doc-side-card">
+                <div class="doc-side-card-title">Add a Slot</div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="rx-field-group">
+                        <label class="rx-label">Day</label>
+                        <select name="day_of_week" class="field-input" required>
+                            {% for value, label in day_choices %}
+                            <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="rx-field-group">
+                        <label class="rx-label">Start Time</label>
+                        <input type="time" name="start_time" class="field-input" required>
+                    </div>
+                    <div class="rx-field-group">
+                        <label class="rx-label">End Time</label>
+                        <input type="time" name="end_time" class="field-input" required>
+                    </div>
+                    <button type="submit" name="add_slot" value="1" class="doc-side-btn">Add Slot</button>
+                </form>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>

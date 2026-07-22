@@ -1,25 +1,45 @@
 {% extends "base.html" %}
-{% block title %}Book Appointment — Pocket Doctor{% endblock %}
+{% block title %}Book Appointment - Pocket Doctor{% endblock %}
 
 {% block content %}
 <div class="form-wrap">
     <p class="page-eyebrow">New Booking</p>
     <h1 class="page-title" style="margin-bottom: 2rem;">Book an Appointment</h1>
 
-    <div class="form-card fade-up">
+    <div class="form-card">
         <form method="POST">
             {% csrf_token %}
             {% for field in form %}
             <div class="field-group">
-                <label class="field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <label class="field-label">{{ field.label }}</label>
                 {{ field }}
                 {% for error in field.errors %}
                     <div class="field-error">{{ error }}</div>
                 {% endfor %}
             </div>
             {% endfor %}
-            <button type="submit" class="btn-form" style="margin-top: 1rem;">Confirm Appointment &rarr;</button>
+
+            {% if form.non_field_errors %}
+                <div class="auth-error-box">
+                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+
+            <button type="submit" class="btn-form">Confirm Appointment &rarr;</button>
         </form>
+
+        {% if doctors_with_slots %}
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(17,19,24,0.08);">
+            <p class="field-label" style="margin-bottom: 0.75rem;">Doctor Availability</p>
+            {% for doctor_id, slots in doctors_with_slots.items %}
+            <div style="margin-bottom: 0.85rem; font-family:'Inter',sans-serif; font-size: 0.82rem;">
+                {% for slot_text in slots %}
+                    <div style="color:#5c5f66;">{{ slot_text }}</div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

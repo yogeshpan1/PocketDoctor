@@ -28,7 +28,19 @@ def book_appointment(request):
             if matching_doctors.exists():
                 form.fields['doctor'].queryset = matching_doctors
 
-    return render(request, 'appointments/book.html', {'form': form})
+    doctors_with_slots = {}
+    for doctor in Doctor.objects.filter(is_active=True):
+        slots = doctor.time_slots.filter(is_active=True).order_by('day_of_week', 'start_time')
+        if slots.exists():
+            doctors_with_slots[doctor.id] = [
+                f"{slot.get_day_of_week_display()}: {slot.start_time.strftime('%I:%M %p')} - {slot.end_time.strftime('%I:%M %p')}"
+                for slot in slots
+            ]
+
+    return render(request, 'appointments/book.html', {
+        'form': form,
+        'doctors_with_slots': doctors_with_slots,
+    })
 
 
 @login_required
@@ -43,8 +55,6 @@ def my_appointments(request):
 
 @login_required
 def appointment_detail(request, appointment_id):
-    # get_object_or_404 with patient=request.user ensures a patient
-    # can only ever view their own appointments, not anyone else's
     appointment = get_object_or_404(Appointment, id=appointment_id, patient=request.user)
 
     if request.method == 'POST':

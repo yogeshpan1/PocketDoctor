@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard — Pocket Doctor</title>
+    <title>Dr. {{ doctor.name }} — Pocket Doctor</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
@@ -14,60 +14,43 @@
 
     <aside class="doc-sidebar">
         <div class="doc-sidebar-header">
-            <div class="doc-avatar">{{ doctor.name|slice:":1" }}</div>
+            <div class="doc-avatar">{{ request.user.username|slice:":1"|upper }}</div>
             <div>
-                <div class="doc-sidebar-name">Dr. {{ doctor.name }}</div>
-                <div class="doc-sidebar-role">{{ doctor.get_department_display }}</div>
+                <div class="doc-sidebar-name">{{ request.user.username }}</div>
+                <div class="doc-sidebar-role">Administrator</div>
             </div>
         </div>
-
         <ul class="doc-nav">
-            <li><a href="{% url 'doctors:dashboard' %}" class="active">Dashboard</a></li>
-            <li><a href="{% url 'doctors:manage_timeslots' %}">Availability</a></li>
+            <li><a href="{% url 'staffadmin:dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'staffadmin:manage_doctors' %}" class="active">Doctors</a></li>
+            <li><a href="{% url 'staffadmin:manage_patients' %}">Patients</a></li>
         </ul>
-
         <div class="doc-logout">
-            <a href="{% url 'logout' %}" class="pd-nav-link" style="font-family:'Inter',sans-serif;font-size:0.8rem;">Logout</a>
+            <a href="{% url 'logout' %}">Logout</a>
         </div>
     </aside>
 
     <main class="doc-main">
 
-        {% if messages %}
-        <div style="margin-bottom: 1.5rem;">
-            {% for message in messages %}
-            <div class="msg msg-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
+        <a href="{% url 'staffadmin:manage_doctors' %}" class="doc-back-link">&larr; Back to Doctors</a>
 
         <div class="doc-header">
             <div>
-                <h1 class="doc-title">Dashboard</h1>
-                <p class="doc-subtitle">Welcome back, Dr. {{ doctor.name }}</p>
+                <h1 class="doc-title">Dr. {{ doctor.name }}</h1>
+                <p class="doc-subtitle">{{ doctor.get_department_display }} &middot;
+                    {% if doctor.user %}Login: {{ doctor.user.username }}{% else %}No login account{% endif %}
+                </p>
             </div>
         </div>
 
-        <div class="doc-stats">
-            <div class="doc-stat-card">
-                <div class="doc-stat-label">Appointments Today</div>
-                <div class="doc-stat-num">{{ appointments_today }}</div>
-            </div>
-            <div class="doc-stat-card">
-                <div class="doc-stat-label">Pending Review</div>
-                <div class="doc-stat-num">{{ pending_count }}</div>
-            </div>
-            <div class="doc-stat-card">
-                <div class="doc-stat-label">Total Patients</div>
-                <div class="doc-stat-num">{{ appointments.count }}</div>
-            </div>
-        </div>
+        {% if doctor.bio %}
+        <div class="doc-problem-box" style="margin-bottom: 1.5rem;">{{ doctor.bio }}</div>
+        {% endif %}
 
         <section class="doc-section">
             <div class="doc-section-header">
-                <h2 class="doc-section-title">All Appointments</h2>
+                <h2 class="doc-section-title">Appointments</h2>
             </div>
-
             {% if appointments %}
             <table class="doc-table">
                 <thead>
@@ -75,17 +58,15 @@
                         <th>Patient</th>
                         <th>Problem</th>
                         <th>Date</th>
-                        <th>Time</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for appt in appointments %}
-                    <tr onclick="window.location='{% url 'doctors:appointment_detail' appt.id %}'">
+                    <tr>
                         <td class="patient-name">{{ appt.patient.username }}</td>
-                        <td class="problem-cell">{{ appt.problem|truncatechars:40 }}</td>
+                        <td class="problem-cell">{{ appt.problem|truncatechars:45 }}</td>
                         <td>{{ appt.date }}</td>
-                        <td>{{ appt.time }}</td>
                         <td>
                             {% if appt.status == 'pending' %}
                                 <span class="doc-chip chip-pending">Pending</span>
@@ -102,7 +83,7 @@
                 </tbody>
             </table>
             {% else %}
-            <div class="doc-empty">No appointments assigned to you yet.</div>
+            <div class="doc-empty">No appointments for this doctor yet.</div>
             {% endif %}
         </section>
 

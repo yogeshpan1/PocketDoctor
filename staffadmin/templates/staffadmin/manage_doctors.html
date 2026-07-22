@@ -63,7 +63,7 @@
                 </thead>
                 <tbody>
                     {% for doctor in doctors %}
-                    <tr>
+                    <tr onclick="window.location='{% url 'staffadmin:doctor_detail' doctor.id %}'" style="cursor:pointer;">
                         <td class="patient-name">Dr. {{ doctor.name }}</td>
                         <td>{{ doctor.get_department_display }}</td>
                         <td>{% if doctor.user %}{{ doctor.user.username }}{% else %}<span style="color:#9ca3af;">No login</span>{% endif %}</td>
@@ -74,7 +74,7 @@
                                 <span class="doc-chip chip-cancelled">Inactive</span>
                             {% endif %}
                         </td>
-                        <td>
+                        <td onclick="event.stopPropagation()">
                             <form method="POST" action="{% url 'staffadmin:toggle_doctor_active' doctor.id %}">
                                 {% csrf_token %}
                                 {% if doctor.is_active %}

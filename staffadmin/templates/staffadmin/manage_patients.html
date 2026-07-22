@@ -60,7 +60,7 @@
                 </thead>
                 <tbody>
                     {% for patient in patients %}
-                    <tr>
+                    <tr onclick="window.location='{% url 'staffadmin:patient_detail' patient.id %}'" style="cursor:pointer;">
                         <td class="patient-name">{{ patient.username }}</td>
                         <td>{{ patient.email }}</td>
                         <td>{{ patient.date_joined|date:"M d, Y" }}</td>
@@ -71,7 +71,7 @@
                                 <span class="doc-chip chip-cancelled">Suspended</span>
                             {% endif %}
                         </td>
-                        <td>
+                        <td onclick="event.stopPropagation()">
                             <form method="POST" action="{% url 'staffadmin:toggle_patient_active' patient.id %}">
                                 {% csrf_token %}
                                 {% if patient.is_active %}

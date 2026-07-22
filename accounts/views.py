@@ -31,6 +31,8 @@ class CustomLoginView(LoginView):
 
     def get_success_url(self):
         user = self.request.user
+        if user.is_staff:
+            return '/staff/'
         if hasattr(user, 'doctor_profile') and user.doctor_profile is not None:
             return '/doctors/'
         return '/'

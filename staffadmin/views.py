@@ -70,15 +70,27 @@ def add_doctor(request):
 
 @staff_required
 def manage_patients(request):
-    patients = User.objects.filter(role='patient').order_by('username')
+    # Exclude staff/superuser accounts from the patient list entirely —
+    # admins manage staff access through Django's own auth system, not here
+    patients = User.objects.filter(role='patient', is_staff=False).order_by('username')
     return render(request, 'staffadmin/manage_patients.html', {'patients': patients})
 
 
 @staff_required
 def toggle_patient_active(request, user_id):
-    patient = get_object_or_404(User, id=user_id, role='patient')
+    patient = get_object_or_404(User, id=user_id, role='patient', is_staff=False)
     patient.is_active = not patient.is_active
     patient.save()
     status = 'activated' if patient.is_active else 'deactivated'
     messages.success(request, f'{patient.username} has been {status}.')
     return redirect('staffadmin:manage_patients')
+
+
+@staff_required
+def patient_detail(request, user_id):
+    patient = get_object_or_404(User, id=user_id, role='patient', is_staff=False)
+    appointments = Appointment.objects.filter(patient=patient).order_by('-date')
+    return render(request, 'staffadmin/patient_detail.html', {
+        'patient': patient,
+        'appointments': appointments,
+    })

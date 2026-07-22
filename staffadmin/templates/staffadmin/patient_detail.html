@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard — Pocket Doctor</title>
+    <title>{{ patient.username }} — Pocket Doctor</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
@@ -20,13 +20,11 @@
                 <div class="doc-sidebar-role">Administrator</div>
             </div>
         </div>
-
         <ul class="doc-nav">
-            <li><a href="{% url 'staffadmin:dashboard' %}" class="active">Dashboard</a></li>
+            <li><a href="{% url 'staffadmin:dashboard' %}">Dashboard</a></li>
             <li><a href="{% url 'staffadmin:manage_doctors' %}">Doctors</a></li>
-            <li><a href="{% url 'staffadmin:manage_patients' %}">Patients</a></li>
+            <li><a href="{% url 'staffadmin:manage_patients' %}" class="active">Patients</a></li>
         </ul>
-
         <div class="doc-logout">
             <a href="{% url 'logout' %}">Logout</a>
         </div>
@@ -34,60 +32,35 @@
 
     <main class="doc-main">
 
-        {% if messages %}
-        <div style="margin-bottom: 1.5rem;">
-            {% for message in messages %}
-            <div class="msg msg-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
+        <a href="{% url 'staffadmin:manage_patients' %}" class="doc-back-link">&larr; Back to Patients</a>
 
         <div class="doc-header">
             <div>
-                <h1 class="doc-title">Admin Dashboard</h1>
-                <p class="doc-subtitle">System-wide overview</p>
-            </div>
-        </div>
-
-        <div class="admin-stats-grid">
-            <div class="doc-stat-card">
-                <div class="doc-stat-label">Total Patients</div>
-                <div class="doc-stat-num">{{ total_patients }}</div>
-            </div>
-            <div class="doc-stat-card">
-                <div class="doc-stat-label">Total Doctors</div>
-                <div class="doc-stat-num">{{ total_doctors }}</div>
-            </div>
-            <div class="doc-stat-card">
-                <div class="doc-stat-label">Total Appointments</div>
-                <div class="doc-stat-num">{{ total_appointments }}</div>
-            </div>
-            <div class="doc-stat-card">
-                <div class="doc-stat-label">Pending</div>
-                <div class="doc-stat-num">{{ pending_appointments }}</div>
+                <h1 class="doc-title">{{ patient.username }}</h1>
+                <p class="doc-subtitle">{{ patient.email|default:"No email on file" }} &middot; Joined {{ patient.date_joined|date:"M d, Y" }}</p>
             </div>
         </div>
 
         <section class="doc-section">
             <div class="doc-section-header">
-                <h2 class="doc-section-title">Recent Appointments</h2>
+                <h2 class="doc-section-title">Appointment History</h2>
             </div>
 
-            {% if recent_appointments %}
+            {% if appointments %}
             <table class="doc-table">
                 <thead>
                     <tr>
-                        <th>Patient</th>
                         <th>Doctor</th>
+                        <th>Problem</th>
                         <th>Date</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for appt in recent_appointments %}
+                    {% for appt in appointments %}
                     <tr>
-                        <td class="patient-name">{{ appt.patient.username }}</td>
-                        <td>Dr. {{ appt.doctor.name }}</td>
+                        <td class="patient-name">Dr. {{ appt.doctor.name }}</td>
+                        <td class="problem-cell">{{ appt.problem|truncatechars:45 }}</td>
                         <td>{{ appt.date }}</td>
                         <td>
                             {% if appt.status == 'pending' %}
@@ -105,7 +78,7 @@
                 </tbody>
             </table>
             {% else %}
-            <div class="doc-empty">No appointments in the system yet.</div>
+            <div class="doc-empty">This patient has no appointments yet.</div>
             {% endif %}
         </section>
 
